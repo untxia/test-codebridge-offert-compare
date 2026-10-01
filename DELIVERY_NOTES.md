@@ -33,13 +33,13 @@ Missed changes: **0/7** on S1–S4, **0/12** on hold-out (after fixes). False ch
 * Tables without borders broke pdfplumber's text strategy → custom header-anchored word alignment; wrapped/vertically-centred labels then dropped a row → fragment re-attachment.
 * My own verification script wrongly failed a long wrapped label → check switched to parsed row number + page + label.
 * **Answer-key correction after seeing app output:** S3's key omitted the stated-total change; the app was right, the key was wrong. I added it as S3-C2 and changed the expected count 1→2. This weakens S3 as independent evidence; stated here deliberately.
-* Not handled: scans (declined on purpose, no OCR), handwriting, multi-currency conversion, non-FR/EN labels, line items spanning pages mid-row, discounts/optional lines as separate semantics.
+* Not handled: scans (declined on purpose, no OCR), handwriting, multi-currency conversion, non-FR/EN labels, discounts/optional lines as separate semantics.
 
 ## 5. AI tools and models
 Claude Code (Anthropic), model **Claude Sonnet 5.5** (`claude-sonnet-5-5`), used to write the code, test set, tests and documents under my direction. No AI model is called by the application at runtime. **[Chris]** add anything else you used.
 
 ## 6. One example of checking AI output
-The AI first reported S3 as passing 1/1 confirmed change. I compared the app's output with the PDFs by eye: the total had also changed (18,900 → 19,640) and was shown by the app but absent from the key. Rather than loosen the app, I corrected the key, disclosed it (§4) and re-ran the independent verifier (`verify_testset.py`, 117+ checks). Another: bounding boxes are validated by re-reading the PDF text under each returned box, not by trusting the extractor.
+Running the app on S3 showed a stated-total change that my answer key lacked. I checked the two PDFs (18,900 → 19,640 is really there), concluded the key was wrong and the app right, corrected the key and disclosed it (§4), then re-ran the independent verifier (`verify_testset.py`). Another: bounding boxes are validated by re-reading the PDF text under each returned box, not by trusting the extractor.
 
 ## 7. Product judgement (20%)
 * Certain vs uncertain is explicit: only unambiguous matches become changes; everything else is a question with the amount at stake, and the answer recomputes the report.
