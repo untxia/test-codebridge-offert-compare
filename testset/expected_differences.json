@@ -1,0 +1,918 @@
+{
+  "meta": {
+    "title": "Jeu de test - comparaison de deux offres commerciales (matériel informatique)",
+    "language": "fr",
+    "currency": "EUR",
+    "vat_rate": "0.20",
+    "fictional": true,
+    "supplier": "Nordika Systèmes SAS",
+    "client": "Atelier Lumière SARL",
+    "offer_ref": "OFF-2026-0412",
+    "generator": "generate_testset.py (reportlab, déterministe)",
+    "how_to_score": {
+      "missed_change": "Écart attendu (substantive_changes ou arithmetic_discrepancies) non rapporté.",
+      "false_change": "Écart rapporté comme confirmé alors qu'il n'est pas dans la vérité terrain (inclut toute entrée de must_not_report_as_commercial_change).",
+      "source_reference_check": "Pour chaque écart rapporté : page et numéro de ligne exacts dans les DEUX documents (sauf ligne supprimée : un seul côté).",
+      "uncertain": "Les éléments de uncertain_matches doivent être séparés des écarts confirmés."
+    },
+    "scope_limits": [
+      "2 PDF texte, 3 pages max chacun (ici 2)",
+      "une seule devise",
+      "10 lignes max (ici 8 et 9)",
+      "pas de scanné/manuscrit (sauf S4 : refus attendu)"
+    ]
+  },
+  "documents": {
+    "original": {
+      "file": "pdf/offer_original.pdf",
+      "version_label": "A",
+      "pages": 2,
+      "line_items": 8,
+      "rows": [
+        {
+          "row_number": 1,
+          "page": 1,
+          "key": "laptop",
+          "label": "Ordinateur portable 15 pouces Pro",
+          "qty": "10",
+          "unit_price": "1150.00",
+          "line_total": "11500.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 2,
+          "page": 1,
+          "key": "screen",
+          "label": "Écran 27 pouces QHD",
+          "qty": "10",
+          "unit_price": "280.00",
+          "line_total": "2800.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 3,
+          "page": 1,
+          "key": "dock",
+          "label": "Station d'accueil USB-C",
+          "qty": "10",
+          "unit_price": "135.00",
+          "line_total": "1350.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 4,
+          "page": 1,
+          "key": "kbm",
+          "label": "Clavier et souris sans fil",
+          "qty": "10",
+          "unit_price": "45.00",
+          "line_total": "450.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 5,
+          "page": 1,
+          "key": "switch",
+          "label": "Switch réseau 24 ports",
+          "qty": "2",
+          "unit_price": "320.00",
+          "line_total": "640.00",
+          "delivery": "2026-11-20"
+        },
+        {
+          "row_number": 6,
+          "page": 2,
+          "key": "ap",
+          "label": "Borne Wi-Fi 6",
+          "qty": "4",
+          "unit_price": "180.00",
+          "line_total": "720.00",
+          "delivery": "2026-11-20"
+        },
+        {
+          "row_number": 7,
+          "page": 2,
+          "key": "install",
+          "label": "Installation et configuration",
+          "qty": "12 h",
+          "unit_price": "70.00",
+          "line_total": "840.00",
+          "delivery": "2026-11-23"
+        },
+        {
+          "row_number": 8,
+          "page": 2,
+          "key": "warranty",
+          "label": "Garantie 3 ans sur site",
+          "qty": "10",
+          "unit_price": "60.00",
+          "line_total": "600.00",
+          "delivery": "À réception"
+        }
+      ],
+      "stated_totals": {
+        "ht": "18900.00",
+        "tva": "3780.00",
+        "ttc": "22680.00"
+      },
+      "recomputed_totals_from_lines": {
+        "ht": "18900.00",
+        "tva": "3780.00",
+        "ttc": "22680.00"
+      },
+      "arithmetic_consistent": true
+    },
+    "revised": {
+      "file": "pdf/offer_revised.pdf",
+      "version_label": "B",
+      "pages": 2,
+      "line_items": 7,
+      "rows": [
+        {
+          "row_number": 1,
+          "page": 1,
+          "key": "screen",
+          "label": "Écran 27 pouces QHD",
+          "qty": "10",
+          "unit_price": "295.00",
+          "line_total": "2950.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 2,
+          "page": 1,
+          "key": "laptop",
+          "label": "PC portable professionnel 15 pouces",
+          "qty": "10",
+          "unit_price": "1150.00",
+          "line_total": "11500.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 3,
+          "page": 1,
+          "key": "dock",
+          "label": "Station d'accueil USB-C",
+          "qty": "10",
+          "unit_price": "135.00",
+          "line_total": "1350.00",
+          "delivery": "2026-11-30"
+        },
+        {
+          "row_number": 4,
+          "page": 1,
+          "key": "ap",
+          "label": "Borne Wi-Fi 6",
+          "qty": "6",
+          "unit_price": "180.00",
+          "line_total": "1080.00",
+          "delivery": "2026-11-20"
+        },
+        {
+          "row_number": 5,
+          "page": 2,
+          "key": "switch",
+          "label": "Switch réseau 24 ports",
+          "qty": "2",
+          "unit_price": "320.00",
+          "line_total": "640.00",
+          "delivery": "2026-11-20"
+        },
+        {
+          "row_number": 6,
+          "page": 2,
+          "key": "install",
+          "label": "Installation et configuration",
+          "qty": "12 h",
+          "unit_price": "70.00",
+          "line_total": "840.00",
+          "delivery": "2026-11-23"
+        },
+        {
+          "row_number": 7,
+          "page": 2,
+          "key": "warranty",
+          "label": "Garantie 3 ans sur site",
+          "qty": "10",
+          "unit_price": "60.00",
+          "line_total": "600.00",
+          "delivery": "À réception"
+        }
+      ],
+      "stated_totals": {
+        "ht": "19060.00",
+        "tva": "3812.00",
+        "ttc": "22872.00"
+      },
+      "recomputed_totals_from_lines": {
+        "ht": "18960.00",
+        "tva": "3792.00",
+        "ttc": "22752.00"
+      },
+      "arithmetic_consistent": false
+    },
+    "reformatted": {
+      "file": "pdf/offer_original_reformatted.pdf",
+      "version_label": "A",
+      "pages": 2,
+      "line_items": 8,
+      "rows": [
+        {
+          "row_number": 1,
+          "page": 1,
+          "key": "laptop",
+          "label": "Ordinateur portable 15 pouces Pro",
+          "qty": "10",
+          "unit_price": "1150.00",
+          "line_total": "11500.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 2,
+          "page": 1,
+          "key": "screen",
+          "label": "Écran 27 pouces QHD",
+          "qty": "10",
+          "unit_price": "280.00",
+          "line_total": "2800.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 3,
+          "page": 1,
+          "key": "dock",
+          "label": "Station d'accueil USB-C",
+          "qty": "10",
+          "unit_price": "135.00",
+          "line_total": "1350.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 4,
+          "page": 1,
+          "key": "kbm",
+          "label": "Clavier et souris sans fil",
+          "qty": "10",
+          "unit_price": "45.00",
+          "line_total": "450.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 5,
+          "page": 1,
+          "key": "switch",
+          "label": "Switch réseau 24 ports",
+          "qty": "2",
+          "unit_price": "320.00",
+          "line_total": "640.00",
+          "delivery": "2026-11-20"
+        },
+        {
+          "row_number": 6,
+          "page": 2,
+          "key": "ap",
+          "label": "Borne Wi-Fi 6",
+          "qty": "4",
+          "unit_price": "180.00",
+          "line_total": "720.00",
+          "delivery": "2026-11-20"
+        },
+        {
+          "row_number": 7,
+          "page": 2,
+          "key": "install",
+          "label": "Installation et configuration",
+          "qty": "12 h",
+          "unit_price": "70.00",
+          "line_total": "840.00",
+          "delivery": "2026-11-23"
+        },
+        {
+          "row_number": 8,
+          "page": 2,
+          "key": "warranty",
+          "label": "Garantie 3 ans sur site",
+          "qty": "10",
+          "unit_price": "60.00",
+          "line_total": "600.00",
+          "delivery": "À réception"
+        }
+      ],
+      "stated_totals": {
+        "ht": "18900.00",
+        "tva": "3780.00",
+        "ttc": "22680.00"
+      },
+      "recomputed_totals_from_lines": {
+        "ht": "18900.00",
+        "tva": "3780.00",
+        "ttc": "22680.00"
+      },
+      "arithmetic_consistent": true
+    },
+    "ambiguous": {
+      "file": "pdf/offer_revised_ambiguous.pdf",
+      "version_label": "B",
+      "pages": 2,
+      "line_items": 9,
+      "rows": [
+        {
+          "row_number": 1,
+          "page": 1,
+          "key": "laptop_a",
+          "label": "PC portable Pro 15 - config standard",
+          "qty": "6",
+          "unit_price": "1150.00",
+          "line_total": "6900.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 2,
+          "page": 1,
+          "key": "laptop_b",
+          "label": "PC portable Pro 15 - config renforcée 32 Go",
+          "qty": "4",
+          "unit_price": "1290.00",
+          "line_total": "5160.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 3,
+          "page": 1,
+          "key": "screen",
+          "label": "Écran 27 pouces QHD",
+          "qty": "10",
+          "unit_price": "280.00",
+          "line_total": "2800.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 4,
+          "page": 1,
+          "key": "dock",
+          "label": "Station d'accueil USB-C",
+          "qty": "10",
+          "unit_price": "135.00",
+          "line_total": "1350.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 5,
+          "page": 1,
+          "key": "pack",
+          "label": "Pack accessoires bureau",
+          "qty": "10",
+          "unit_price": "45.00",
+          "line_total": "450.00",
+          "delivery": "2026-11-16"
+        },
+        {
+          "row_number": 6,
+          "page": 2,
+          "key": "switch",
+          "label": "Équipement réseau 24 ports",
+          "qty": "2",
+          "unit_price": "320.00",
+          "line_total": "640.00",
+          "delivery": "2026-11-20"
+        },
+        {
+          "row_number": 7,
+          "page": 2,
+          "key": "ap",
+          "label": "Borne Wi-Fi 6",
+          "qty": "5",
+          "unit_price": "180.00",
+          "line_total": "900.00",
+          "delivery": "2026-11-20"
+        },
+        {
+          "row_number": 8,
+          "page": 2,
+          "key": "install",
+          "label": "Installation et configuration",
+          "qty": "12 h",
+          "unit_price": "70.00",
+          "line_total": "840.00",
+          "delivery": "2026-11-23"
+        },
+        {
+          "row_number": 9,
+          "page": 2,
+          "key": "warranty",
+          "label": "Garantie 3 ans sur site",
+          "qty": "10",
+          "unit_price": "60.00",
+          "line_total": "600.00",
+          "delivery": "À réception"
+        }
+      ],
+      "stated_totals": {
+        "ht": "19640.00",
+        "tva": "3928.00",
+        "ttc": "23568.00"
+      },
+      "recomputed_totals_from_lines": {
+        "ht": "19640.00",
+        "tva": "3928.00",
+        "ttc": "23568.00"
+      },
+      "arithmetic_consistent": true
+    }
+  },
+  "scenarios": [
+    {
+      "id": "S1_normal",
+      "purpose": "Cas normal : tous les types d'écarts demandés, plus des changements de mise en forme sans effet.",
+      "original": "pdf/offer_original.pdf",
+      "revised": "pdf/offer_revised.pdf",
+      "expected_decision": "conclude",
+      "matches": [
+        {
+          "original_row": 1,
+          "revised_row": 2,
+          "status": "confirmed",
+          "note": "Renommage seul (Ordinateur portable 15 pouces Pro -> PC portable professionnel 15 pouces) : pas un écart commercial."
+        },
+        {
+          "original_row": 2,
+          "revised_row": 1,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 3,
+          "revised_row": 3,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 4,
+          "revised_row": null,
+          "status": "removed",
+          "note": "Clavier et souris sans fil n'existe plus dans la révision."
+        },
+        {
+          "original_row": 5,
+          "revised_row": 5,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 6,
+          "revised_row": 4,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 7,
+          "revised_row": 6,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 8,
+          "revised_row": 7,
+          "status": "confirmed"
+        }
+      ],
+      "uncertain_matches": [],
+      "substantive_changes": [
+        {
+          "id": "S1-C1",
+          "type": "unit_price",
+          "item_key": "screen",
+          "original": {
+            "qty": "10",
+            "unit_price": "280.00",
+            "line_total": "2800.00",
+            "delivery": "2026-11-16"
+          },
+          "revised": {
+            "qty": "10",
+            "unit_price": "295.00",
+            "line_total": "2950.00",
+            "delivery": "2026-11-16"
+          },
+          "line_total_delta": "150.00",
+          "sources": {
+            "original": {
+              "file": "pdf/offer_original.pdf",
+              "page": 1,
+              "row_number": 2,
+              "label_text": "Écran 27 pouces QHD"
+            },
+            "revised": {
+              "file": "pdf/offer_revised.pdf",
+              "page": 1,
+              "row_number": 1,
+              "label_text": "Écran 27 pouces QHD"
+            }
+          }
+        },
+        {
+          "id": "S1-C2",
+          "type": "quantity",
+          "item_key": "ap",
+          "original": {
+            "qty": "4",
+            "unit_price": "180.00",
+            "line_total": "720.00",
+            "delivery": "2026-11-20"
+          },
+          "revised": {
+            "qty": "6",
+            "unit_price": "180.00",
+            "line_total": "1080.00",
+            "delivery": "2026-11-20"
+          },
+          "line_total_delta": "360.00",
+          "sources": {
+            "original": {
+              "file": "pdf/offer_original.pdf",
+              "page": 2,
+              "row_number": 6,
+              "label_text": "Borne Wi-Fi 6"
+            },
+            "revised": {
+              "file": "pdf/offer_revised.pdf",
+              "page": 1,
+              "row_number": 4,
+              "label_text": "Borne Wi-Fi 6"
+            }
+          }
+        },
+        {
+          "id": "S1-C3",
+          "type": "scope_removed",
+          "item_key": "kbm",
+          "original": {
+            "qty": "10",
+            "unit_price": "45.00",
+            "line_total": "450.00",
+            "delivery": "2026-11-16"
+          },
+          "revised": null,
+          "line_total_delta": "-450.00",
+          "sources": {
+            "original": {
+              "file": "pdf/offer_original.pdf",
+              "page": 1,
+              "row_number": 4,
+              "label_text": "Clavier et souris sans fil"
+            },
+            "revised": null
+          }
+        },
+        {
+          "id": "S1-C4",
+          "type": "delivery_date",
+          "item_key": "dock",
+          "original": {
+            "qty": "10",
+            "unit_price": "135.00",
+            "line_total": "1350.00",
+            "delivery": "2026-11-16"
+          },
+          "revised": {
+            "qty": "10",
+            "unit_price": "135.00",
+            "line_total": "1350.00",
+            "delivery": "2026-11-30"
+          },
+          "line_total_delta": "0.00",
+          "sources": {
+            "original": {
+              "file": "pdf/offer_original.pdf",
+              "page": 1,
+              "row_number": 3,
+              "label_text": "Station d'accueil USB-C"
+            },
+            "revised": {
+              "file": "pdf/offer_revised.pdf",
+              "page": 1,
+              "row_number": 3,
+              "label_text": "Station d'accueil USB-C"
+            }
+          }
+        },
+        {
+          "id": "S1-C5",
+          "type": "stated_total",
+          "item_key": null,
+          "original": {
+            "total_ht": "18900.00"
+          },
+          "revised": {
+            "total_ht": "19060.00"
+          },
+          "stated_total_ht_delta": "160.00",
+          "sources": {
+            "original": {
+              "file": "pdf/offer_original.pdf",
+              "page": 2,
+              "block": "totals",
+              "label_text": "Total HT"
+            },
+            "revised": {
+              "file": "pdf/offer_revised.pdf",
+              "page": 2,
+              "block": "totals",
+              "label_text": "TOTAL HT"
+            }
+          }
+        }
+      ],
+      "arithmetic_discrepancies": [
+        {
+          "id": "S1-A1",
+          "document": "revised",
+          "field": "total_ht",
+          "stated": "19060.00",
+          "recomputed_from_lines": "18960.00",
+          "difference": "100.00",
+          "note": "TVA et TTC affichés sont cohérents avec le HT affiché (faux) ; le signaler sans corriger silencieusement.",
+          "sources": {
+            "revised": {
+              "file": "pdf/offer_revised.pdf",
+              "page": 2,
+              "block": "totals",
+              "label_text": "TOTAL HT"
+            }
+          }
+        }
+      ],
+      "net_effect": {
+        "recomputed_ht_original": "18900.00",
+        "recomputed_ht_revised": "18960.00",
+        "recomputed_delta": "60.00",
+        "stated_delta": "160.00"
+      },
+      "must_not_report_as_commercial_change": [
+        "Renommage de la ligne portable",
+        "Réordonnancement des lignes",
+        "Version A -> B",
+        "Polices, couleurs, alignement",
+        "Format des montants (1 150,00 € -> EUR 1 150,00)",
+        "Format des dates (16/11/2026 -> 16 novembre 2026)",
+        "Libellés d'en-têtes de colonnes et de totaux"
+      ],
+      "expected_counts": {
+        "confirmed_changes": 5,
+        "arithmetic_discrepancies": 1,
+        "false_changes_allowed": 0
+      }
+    },
+    {
+      "id": "S2_formatting_only",
+      "purpose": "Même contenu, mise en forme différente : aucun écart substantiel.",
+      "original": "pdf/offer_original.pdf",
+      "revised": "pdf/offer_original_reformatted.pdf",
+      "expected_decision": "no_changes",
+      "matches": [
+        {
+          "original_row": 1,
+          "revised_row": 1,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 2,
+          "revised_row": 2,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 3,
+          "revised_row": 3,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 4,
+          "revised_row": 4,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 5,
+          "revised_row": 5,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 6,
+          "revised_row": 6,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 7,
+          "revised_row": 7,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 8,
+          "revised_row": 8,
+          "status": "confirmed"
+        }
+      ],
+      "uncertain_matches": [],
+      "substantive_changes": [],
+      "arithmetic_discrepancies": [],
+      "must_not_report_as_commercial_change": [
+        "Polices, couleurs, zébrage",
+        "Format des montants",
+        "Format des dates",
+        "En-têtes de colonnes",
+        "Casse des libellés de totaux"
+      ],
+      "expected_counts": {
+        "confirmed_changes": 0,
+        "arithmetic_discrepancies": 0,
+        "false_changes_allowed": 0
+      }
+    },
+    {
+      "id": "S3_ambiguous",
+      "purpose": "Ambiguïté : une ligne scindée et un renommage vague. Ne pas conclure sans confirmation.",
+      "original": "pdf/offer_original.pdf",
+      "revised": "pdf/offer_revised_ambiguous.pdf",
+      "expected_decision": "conclude_partially_and_ask",
+      "matches": [
+        {
+          "original_row": 2,
+          "revised_row": 3,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 3,
+          "revised_row": 4,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 5,
+          "revised_row": 6,
+          "status": "confirmed_or_uncertain",
+          "note": "Switch réseau 24 ports -> Équipement réseau 24 ports : mêmes quantité, prix et date ; confirmé ou signalé, les deux acceptés."
+        },
+        {
+          "original_row": 6,
+          "revised_row": 7,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 7,
+          "revised_row": 8,
+          "status": "confirmed"
+        },
+        {
+          "original_row": 8,
+          "revised_row": 9,
+          "status": "confirmed"
+        }
+      ],
+      "uncertain_matches": [
+        {
+          "original_row": 1,
+          "revised_rows": [
+            1,
+            2
+          ],
+          "why": "Une ligne (10 x 1150,00) devient deux lignes (6 x 1150,00 et 4 x 1290,00, config 32 Go) : scission, montée en gamme ou nouvelle ligne ? Ne pas affirmer 'prix unitaire passé de 1150 à 1290'.",
+          "sources": {
+            "original": {
+              "file": "pdf/offer_original.pdf",
+              "page": 1,
+              "row_number": 1,
+              "label_text": "Ordinateur portable 15 pouces Pro"
+            },
+            "revised": [
+              {
+                "file": "pdf/offer_revised_ambiguous.pdf",
+                "page": 1,
+                "row_number": 1,
+                "label_text": "PC portable Pro 15 - config standard"
+              },
+              {
+                "file": "pdf/offer_revised_ambiguous.pdf",
+                "page": 1,
+                "row_number": 2,
+                "label_text": "PC portable Pro 15 - config renforcée 32 Go"
+              }
+            ]
+          }
+        },
+        {
+          "original_row": 4,
+          "revised_rows": [
+            5
+          ],
+          "why": "Clavier et souris sans fil (10 x 45,00) vs Pack accessoires bureau (10 x 45,00) : renommage ou remplacement ? Ne pas affirmer 'ligne supprimée' ni 'ligne ajoutée'.",
+          "sources": {
+            "original": {
+              "file": "pdf/offer_original.pdf",
+              "page": 1,
+              "row_number": 4,
+              "label_text": "Clavier et souris sans fil"
+            },
+            "revised": {
+              "file": "pdf/offer_revised_ambiguous.pdf",
+              "page": 1,
+              "row_number": 5,
+              "label_text": "Pack accessoires bureau"
+            }
+          }
+        }
+      ],
+      "substantive_changes": [
+        {
+          "id": "S3-C1",
+          "type": "quantity",
+          "item_key": "ap",
+          "original": {
+            "qty": "4",
+            "unit_price": "180.00",
+            "line_total": "720.00",
+            "delivery": "2026-11-20"
+          },
+          "revised": {
+            "qty": "5",
+            "unit_price": "180.00",
+            "line_total": "900.00",
+            "delivery": "2026-11-20"
+          },
+          "line_total_delta": "180.00",
+          "sources": {
+            "original": {
+              "file": "pdf/offer_original.pdf",
+              "page": 2,
+              "row_number": 6,
+              "label_text": "Borne Wi-Fi 6"
+            },
+            "revised": {
+              "file": "pdf/offer_revised_ambiguous.pdf",
+              "page": 2,
+              "row_number": 7,
+              "label_text": "Borne Wi-Fi 6"
+            }
+          }
+        },
+        {
+          "id": "S3-C2",
+          "type": "stated_total",
+          "item_key": null,
+          "original": {
+            "total_ht": "18900.00"
+          },
+          "revised": {
+            "total_ht": "19640.00"
+          },
+          "stated_total_ht_delta": "740.00",
+          "sources": {
+            "original": {
+              "file": "pdf/offer_original.pdf",
+              "page": 2,
+              "block": "totals",
+              "label_text": "Total HT"
+            },
+            "revised": {
+              "file": "pdf/offer_revised_ambiguous.pdf",
+              "page": 2,
+              "block": "totals",
+              "label_text": "TOTAL HT"
+            }
+          }
+        }
+      ],
+      "arithmetic_discrepancies": [],
+      "required_clarifications": 2,
+      "net_effect": {
+        "recomputed_ht_original": "18900.00",
+        "recomputed_ht_revised": "19640.00",
+        "note": "Écart global calculable, mais son attribution ligne à ligne reste incertaine pour les lignes 1 et 4."
+      },
+      "must_not_report_as_commercial_change": [
+        "Mise en forme",
+        "Version A -> B"
+      ],
+      "expected_counts": {
+        "confirmed_changes": 2,
+        "arithmetic_discrepancies": 0,
+        "uncertain_items": 2,
+        "false_changes_allowed": 0
+      }
+    },
+    {
+      "id": "S4_unreadable",
+      "purpose": "Entrée hors périmètre : PDF scanné sans couche texte. Refuser de conclure et le dire.",
+      "original": "pdf/offer_original.pdf",
+      "revised": "pdf/offer_revised_scanned.pdf",
+      "expected_decision": "decline",
+      "expected_behaviour": [
+        "Détecter l'absence de texte exploitable dans la révision.",
+        "Ne produire aucune liste d'écarts ni aucun chiffre pour ce document.",
+        "Demander un PDF texte (non scanné) ou une saisie de confirmation par l'utilisateur."
+      ],
+      "matches": [],
+      "uncertain_matches": [],
+      "substantive_changes": [],
+      "arithmetic_discrepancies": [],
+      "expected_counts": {
+        "confirmed_changes": 0,
+        "arithmetic_discrepancies": 0,
+        "false_changes_allowed": 0
+      },
+      "note": "Contenu source du scan = offer_revised.pdf ; toute valeur chiffrée annoncée serait une hallucination ou un OCR non demandé."
+    }
+  ]
+}

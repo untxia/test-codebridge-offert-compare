@@ -1,0 +1,34 @@
+{
+ "expected": {
+  "changes": [
+   [
+    "unit_price",
+    "10GbE network card dual port"
+   ],
+   [
+    "quantity",
+    "NVMe SSD 2TB enterprise"
+   ],
+   [
+    "delivery_date",
+    "Extended warranty 3 years"
+   ],
+   [
+    "scope_removed",
+    "Rack mounting rail kit"
+   ],
+   [
+    "scope_added",
+    "UPS 3kVA rack battery backup"
+   ],
+   [
+    "stated_total",
+    null
+   ]
+  ],
+  "not_changes": [
+   "1U rack server (Xeon) rename",
+   "row reorder"
+  ]
+ }
+}
