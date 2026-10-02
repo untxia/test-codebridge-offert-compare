@@ -536,6 +536,17 @@ function init() {
       app.style.setProperty('--wx', ((.5 - e.clientY / innerHeight) * 2.5).toFixed(2) + 'deg');
     }, { passive: true });
   }
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {   // reflet de la vitre : suit le pointeur
+    let glassEl = null;
+    addEventListener('pointermove', (e) => {
+      const g = e.target.closest && e.target.closest('.card, .window, dialog');
+      if (g !== glassEl && glassEl) { glassEl.style.removeProperty('--mx'); glassEl.style.removeProperty('--my'); }
+      glassEl = g;
+      if (!g) return;
+      const r = g.getBoundingClientRect();
+      g.style.setProperty('--mx', (e.clientX - r.left).toFixed(0) + 'px'); g.style.setProperty('--my', (e.clientY - r.top).toFixed(0) + 'px');
+    }, { passive: true });
+  }
   const win = $('#viewer');   // fenêtre volante : légère inclinaison 3D qui suit le pointeur (désactivée si mouvement réduit)
   const calm = matchMedia('(prefers-reduced-motion: reduce)');
   win.addEventListener('pointermove', (e) => {

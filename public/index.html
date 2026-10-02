@@ -11,6 +11,14 @@
   <link rel="stylesheet" href="vendor/tailwind.css">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <!-- réfraction du verre : le décor derrière est légèrement déformé (Chromium ; ailleurs, simple flou) -->
+  <filter id="glass-refract" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.006 0.009" numOctaves="2" seed="7" result="n"/>
+    <feGaussianBlur in="n" stdDeviation="2" result="nb"/>
+    <feDisplacementMap in="SourceGraphic" in2="nb" scale="34" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
   <header class="top">
     <div class="wrap top-in">
       <h1 class="brand"><img src="assets/logo.svg" alt="" width="36" height="36"><span id="t-title">Offer Compare</span></h1>
