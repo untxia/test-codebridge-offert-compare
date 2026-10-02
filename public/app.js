@@ -177,7 +177,7 @@ function applyStatic() {
   document.documentElement.lang = lang;
   document.title = t('title');
   const set = (id, k) => { $(id).textContent = t(k); };
-  set('#t-title', 'title'); set('#t-intro', 'intro'); buildHero(); for (const k of ['nav_cmp', 'nav_res', 'nav_how']) set('#t-' + k.replace('_', '-'), k); for (const k of ['eyebrow', 'cta', 'cta_note', 'p1t', 'p1d', 'p2t', 'p2d', 'p3t', 'p3d']) set('#t-' + k.replace('_', '-'), k); set('#t-inputs', 'inputs'); set('#t-orig', 'orig'); set('#t-rev', 'rev');
+  { const [w1, ...w2] = t('title').split(' '); $('#t-title').innerHTML = '<b>' + w1 + '</b><em>' + w2.join(' ') + '</em>'; } set('#t-intro', 'intro'); buildHero(); for (const k of ['nav_cmp', 'nav_res', 'nav_how']) set('#t-' + k.replace('_', '-'), k); for (const k of ['eyebrow', 'cta', 'cta_note', 'p1t', 'p1d', 'p2t', 'p2d', 'p3t', 'p3d']) set('#t-' + k.replace('_', '-'), k); set('#t-inputs', 'inputs'); set('#t-orig', 'orig'); set('#t-rev', 'rev');
   set('#t-samples', 'samples'); set('#t-limits', 'limits'); set('#viewer-title', 'v_title'); set('#viewer-close', 'v_close');
   $('#btn-compare').textContent = state.busy ? t('comparing') : t('compare');
   for (const b of document.querySelectorAll('[data-sample]')) b.textContent = t('s_' + b.dataset.sample);

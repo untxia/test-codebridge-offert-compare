@@ -61,7 +61,10 @@
   .nav a:hover { color: #fff; background: rgba(255,255,255,.1); }
   .brand img { transition: transform .5s cubic-bezier(.2,.8,.2,1); } .brand:hover img { transform: rotate(-8deg) scale(1.1); }
   .top-in { @apply flex items-center justify-between py-2.5; }
-  .brand { @apply flex items-center gap-2.5 font-display font-bold text-xl tracking-tight; }
+  .brand { @apply flex items-center gap-2.5 font-display font-bold tracking-tight; font-size: 1.4rem; letter-spacing: -.03em; line-height: 1; }
+  .brand b { font-weight: 800; color: #fff; text-shadow: 0 0 18px rgba(159,176,255,.45); }
+  .brand em { font-style: normal; font-weight: 800; margin-left: .28em; background: linear-gradient(100deg, #9fb0ff 0%, #4adea8 35%, #ffd23f 65%, #ff9ad5 100%); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmer 7s linear infinite; }
+  .brand > span { display: inline-flex; align-items: baseline; }
   .brand img { @apply h-9 w-9; }
   .lang { @apply flex gap-1; }
   .lang button { @apply px-2.5 py-1 rounded-md text-sm text-mist border border-white/15 bg-transparent; }
@@ -236,5 +239,5 @@
   table.responsive tr { @apply block border-b border-white/10 py-1.5; }
   table.responsive td { @apply block border-0 px-1 py-0.5 text-left; }
 }
-@media (prefers-reduced-motion: reduce) { .eyebrow .pulse, .hero-copy h2 .em { animation: none; } .hero-copy h2 .ul::after { transform: scaleX(1); transition: none; } .hero-copy h2 { transform: none; } .rv, .rvw .w > span { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; } .hero-copy { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .brand em { animation: none; } .eyebrow .pulse, .hero-copy h2 .em { animation: none; } .hero-copy h2 .ul::after { transform: scaleX(1); transition: none; } .hero-copy h2 { transform: none; } .rv, .rvw .w > span { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; } .hero-copy { opacity: 1; transform: none; }
   .spin, dialog.fly, .hl, .window, body::before { animation: none; } .drop:hover { transform: none; } dialog { transition: none; } }
