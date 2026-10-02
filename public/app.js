@@ -177,11 +177,81 @@ function applyStatic() {
   for (const side of ['original', 'revised']) $('#name-' + side).textContent = state.files[side] ? state.files[side].name : t('choose');
 }
 
+/* ---------- apparition au défilement ---------- */
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const io = ('IntersectionObserver' in window && !REDUCED) ? new IntersectionObserver((entries) => {
+  let k = 0;   // ce qui apparaît en même temps est décalé : effet de cascade
+  for (const e of entries) {
+    if (!e.isIntersecting) continue;
+    e.target.style.transitionDelay = Math.min(k++, 9) * 75 + 'ms';
+    e.target.classList.add('in');
+    io.unobserve(e.target);
+  }
+}, { threshold: 0.14, rootMargin: '0px 0px -7% 0px' }) : null;
+
+function reveal(el, cls = 'rv') {
+  if (!io || el.classList.contains('in')) return;
+  el.classList.add(...cls.split(' '));
+  io.observe(el);
+}
+
+/* Titre découpé en mots : chaque mot monte de derrière un masque. Le texte lu par les lecteurs d'écran reste la phrase entière. */
+function splitWords(el, cls = 'rvw') {
+  if (!io) return false;
+  const text = el.textContent;
+  el.classList.remove('in');
+  el.setAttribute('aria-label', text);
+  el.replaceChildren(...text.split(/\s+/).filter(Boolean).flatMap((w, i, a) => {
+    const span = el.ownerDocument.createElement('span');
+    span.className = 'w'; span.setAttribute('aria-hidden', 'true');
+    const inner = el.ownerDocument.createElement('span');
+    inner.textContent = w; inner.style.setProperty('--i', i);
+    span.append(inner);
+    return i < a.length - 1 ? [span, ' '] : [span];
+  }));
+  el.classList.add(cls);
+  return true;
+}
+
+function animateHero() {
+  const h = $('#t-hero');
+  if (!io || h.dataset.done === lang) return;
+  h.dataset.done = lang;
+  splitWords(h);
+  requestAnimationFrame(() => requestAnimationFrame(() => h.classList.add('in')));
+  const intro = $('#t-intro');
+  intro.classList.remove('in', 'rv'); void intro.offsetWidth; intro.style.transitionDelay = '420ms';
+  intro.classList.add('rv'); requestAnimationFrame(() => requestAnimationFrame(() => intro.classList.add('in')));
+}
+
+function animateWindow() {
+  [...$('#app-window').children].filter((c) => !c.classList.contains('titlebar')).forEach((c) => reveal(c, 'rv rv-soft'));
+}
+
+function animateResult() {
+  for (const card of $('#result').children) {
+    reveal(card, 'rv rv-card');
+    card.querySelectorAll('h2').forEach((h) => { if (splitWords(h)) io.observe(h); });
+    card.querySelectorAll('tbody tr, li, .kv > *, p').forEach((x) => reveal(x, 'rv rv-soft'));
+  }
+}
+
+/* Le bloc d'intro s'estompe et remonte doucement quand on descend. */
+function heroScroll() {
+  if (REDUCED) return;
+  const hc = document.querySelector('.hero-copy');
+  let tick = false;
+  addEventListener('scroll', () => {
+    if (tick) return; tick = true;
+    requestAnimationFrame(() => { hc.style.setProperty('--hp', Math.min(1, Math.max(0, scrollY / 420)).toFixed(3)); tick = false; });
+  }, { passive: true });
+}
+
 /* ---------- fichiers ---------- */
 function setFile(side, file) {
   state.files[side] = file;
   state.overrides = { pairs: [], removed: [], added: [] };
-  state.pdf[side] = null;
+  state.pdf[side] = null; state.hadReport = false;
   if (file && window.pdfjsLib && /\.pdf$/i.test(file.name)) {
     state.pdf[side] = file.arrayBuffer().then((buf) => pdfjsLib.getDocument({ data: buf }).promise).catch(() => null);
   }
@@ -390,7 +460,9 @@ function techSection(r) {
 
 function renderReport() {
   const r = state.report;
+  const first = !state.hadReport; state.hadReport = true;
   $('#result').replaceChildren(...[banner(r), netEffect(r), changesSection(r), uncertainSection(r), arithSection(r), ncSection(r), techSection(r)].filter(Boolean));
+  if (first) animateResult();
 }
 
 /* ---------- visionneuse de sources ---------- */
@@ -456,7 +528,7 @@ function init() {
   }
   $('#btn-compare').addEventListener('click', runCompare);
   for (const b of document.querySelectorAll('[data-sample]')) b.addEventListener('click', () => loadSample(b.dataset.sample));
-  for (const b of document.querySelectorAll('[data-lang]')) b.addEventListener('click', () => { lang = b.dataset.lang; applyStatic(); if (state.report) renderReport(); });
+  for (const b of document.querySelectorAll('[data-lang]')) b.addEventListener('click', () => { lang = b.dataset.lang; applyStatic(); animateHero(); if (state.report) renderReport(); });
   const app = $('#app-window');   // fenêtre principale : même inclinaison 3D, plus discrète
   if (app && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     addEventListener('pointermove', (e) => {
@@ -476,5 +548,6 @@ function init() {
   $('#viewer-close').addEventListener('click', () => $('#viewer').close());
   $('#viewer').addEventListener('click', (e) => { if (e.target === $('#viewer')) $('#viewer').close(); });
   applyStatic();
+  animateHero(); animateWindow(); heroScroll();
 }
 init();
