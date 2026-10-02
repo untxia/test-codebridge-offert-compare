@@ -4,7 +4,7 @@
 const I18N = {
   fr: {
     title: 'Offer Compare',
-    eyebrow: "Comparateur d'offres commerciales", cta: 'Comparer deux offres', cta_note: 'Aucun compte, rien n\'est conservé',
+    eyebrow: "Comparateur d'offres commerciales", cta: 'Comparer deux offres', cta_note: 'Aucun compte, rien n\'est conservé', nav_cmp: 'Comparer', nav_res: 'Résultats', nav_how: 'Principe',
     p1t: 'Les écarts qui comptent', p1d: 'Périmètre, quantités, prix, totaux, dates de livraison. Le reste (mise en forme, ordre, libellés) est mis de côté.',
     p2t: 'La preuve, des deux côtés', p2d: 'Chaque changement renvoie à son emplacement exact dans les deux documents : page, cellule ou ligne.',
     p3t: "Un doute ? Il le dit", p3d: "Lignes ambiguës à confirmer, totaux incohérents signalés sans être corrigés, refus net si le document est illisible.",
@@ -65,7 +65,7 @@ const I18N = {
   },
   en: {
     title: 'Offer Compare',
-    eyebrow: 'Commercial offer comparison', cta: 'Compare two offers', cta_note: 'No account, nothing is stored',
+    eyebrow: 'Commercial offer comparison', cta: 'Compare two offers', cta_note: 'No account, nothing is stored', nav_cmp: 'Compare', nav_res: 'Results', nav_how: 'How it works',
     p1t: 'The changes that matter', p1d: 'Scope, quantities, prices, totals, delivery dates. The rest (layout, order, wording) is set aside.',
     p2t: 'Proof on both sides', p2d: 'Every change points to its exact location in both documents: page, cell or line.',
     p3t: 'In doubt? It says so', p3d: 'Ambiguous lines to confirm, inconsistent totals flagged but never corrected, a clear refusal when a document is unreadable.',
@@ -177,7 +177,7 @@ function applyStatic() {
   document.documentElement.lang = lang;
   document.title = t('title');
   const set = (id, k) => { $(id).textContent = t(k); };
-  set('#t-title', 'title'); set('#t-intro', 'intro'); buildHero(); for (const k of ['eyebrow', 'cta', 'cta_note', 'p1t', 'p1d', 'p2t', 'p2d', 'p3t', 'p3d']) set('#t-' + k.replace('_', '-'), k); set('#t-inputs', 'inputs'); set('#t-orig', 'orig'); set('#t-rev', 'rev');
+  set('#t-title', 'title'); set('#t-intro', 'intro'); buildHero(); for (const k of ['nav_cmp', 'nav_res', 'nav_how']) set('#t-' + k.replace('_', '-'), k); for (const k of ['eyebrow', 'cta', 'cta_note', 'p1t', 'p1d', 'p2t', 'p2d', 'p3t', 'p3d']) set('#t-' + k.replace('_', '-'), k); set('#t-inputs', 'inputs'); set('#t-orig', 'orig'); set('#t-rev', 'rev');
   set('#t-samples', 'samples'); set('#t-limits', 'limits'); set('#viewer-title', 'v_title'); set('#viewer-close', 'v_close');
   $('#btn-compare').textContent = state.busy ? t('comparing') : t('compare');
   for (const b of document.querySelectorAll('[data-sample]')) b.textContent = t('s_' + b.dataset.sample);
@@ -287,6 +287,9 @@ function heroScroll() {
     if (ptick) return; ptick = true;
     requestAnimationFrame(() => { hc.style.setProperty('--px', ((e.clientX / innerWidth - .5) * 2).toFixed(3)); hc.style.setProperty('--py', ((e.clientY / innerHeight - .5) * 2).toFixed(3)); ptick = false; });
   }, { passive: true });
+  const top = document.querySelector('.top'), bar = document.getElementById('top-bar');
+  const hdr = () => { const m = document.documentElement.scrollHeight - innerHeight; top.classList.toggle('sm', scrollY > 40); bar.style.transform = 'scaleX(' + (m > 0 ? Math.min(1, scrollY / m) : 0).toFixed(4) + ')'; };
+  hdr(); addEventListener('scroll', hdr, { passive: true });
   addEventListener('scroll', () => {
     if (tick) return; tick = true;
     requestAnimationFrame(() => { hc.style.setProperty('--hp', Math.min(1, Math.max(0, scrollY / 520)).toFixed(3)); tick = false; });
