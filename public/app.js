@@ -218,6 +218,8 @@ function animateHero() {
   if (!io || h.dataset.done === lang) return;
   h.dataset.done = lang;
   splitWords(h);
+  const ws = [...h.querySelectorAll('.w')];   // direction propre à chaque mot pour l'effet au défilement
+  ws.forEach((w, i) => { w.style.setProperty('--dx', ((i - (ws.length - 1) / 2) * 6).toFixed(1) + 'px'); w.style.setProperty('--dy', (-(10 + (i % 3) * 16 + i * 2)).toFixed(0) + 'px'); });
   requestAnimationFrame(() => requestAnimationFrame(() => h.classList.add('in')));
   const intro = $('#t-intro');
   intro.classList.remove('in', 'rv'); void intro.offsetWidth; intro.style.transitionDelay = '420ms';
@@ -243,7 +245,7 @@ function heroScroll() {
   let tick = false;
   addEventListener('scroll', () => {
     if (tick) return; tick = true;
-    requestAnimationFrame(() => { hc.style.setProperty('--hp', Math.min(1, Math.max(0, scrollY / 420)).toFixed(3)); tick = false; });
+    requestAnimationFrame(() => { hc.style.setProperty('--hp', Math.min(1, Math.max(0, scrollY / 520)).toFixed(3)); tick = false; });
   }, { passive: true });
 }
 
