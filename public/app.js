@@ -4,7 +4,7 @@
 const I18N = {
   fr: {
     title: 'Offer Compare',
-    eyebrow: "Comparateur d'offres commerciales", cta: 'Comparer deux offres', cta_note: 'Aucun compte, rien n\'est conservé', nav_cmp: 'Comparer', nav_res: 'Résultats', nav_how: 'Principe',
+    eyebrow: "Comparateur d'offres commerciales", cta: 'Comparer deux offres', sp_tag: 'Voyez ce qui a vraiment changé', sp_cue: 'Défiler pour entrer', cta_note: 'Aucun compte, rien n\'est conservé', nav_cmp: 'Comparer', nav_res: 'Résultats', nav_how: 'Principe',
     p1t: 'Les écarts qui comptent', p1d: 'Périmètre, quantités, prix, totaux, dates de livraison. Le reste (mise en forme, ordre, libellés) est mis de côté.',
     p2t: 'La preuve, des deux côtés', p2d: 'Chaque changement renvoie à son emplacement exact dans les deux documents : page, cellule ou ligne.',
     p3t: "Un doute ? Il le dit", p3d: "Lignes ambiguës à confirmer, totaux incohérents signalés sans être corrigés, refus net si le document est illisible.",
@@ -65,7 +65,7 @@ const I18N = {
   },
   en: {
     title: 'Offer Compare',
-    eyebrow: 'Commercial offer comparison', cta: 'Compare two offers', cta_note: 'No account, nothing is stored', nav_cmp: 'Compare', nav_res: 'Results', nav_how: 'How it works',
+    eyebrow: 'Commercial offer comparison', cta: 'Compare two offers', sp_tag: 'See what really changed', sp_cue: 'Scroll to enter', cta_note: 'No account, nothing is stored', nav_cmp: 'Compare', nav_res: 'Results', nav_how: 'How it works',
     p1t: 'The changes that matter', p1d: 'Scope, quantities, prices, totals, delivery dates. The rest (layout, order, wording) is set aside.',
     p2t: 'Proof on both sides', p2d: 'Every change points to its exact location in both documents: page, cell or line.',
     p3t: 'In doubt? It says so', p3d: 'Ambiguous lines to confirm, inconsistent totals flagged but never corrected, a clear refusal when a document is unreadable.',
@@ -177,7 +177,7 @@ function applyStatic() {
   document.documentElement.lang = lang;
   document.title = t('title');
   const set = (id, k) => { $(id).textContent = t(k); };
-  { const [w1, ...w2] = t('title').split(' '); $('#t-title').innerHTML = '<b>' + w1 + '</b><em>' + w2.join(' ') + '</em>'; } set('#t-intro', 'intro'); buildHero(); for (const k of ['nav_cmp', 'nav_res', 'nav_how']) set('#t-' + k.replace('_', '-'), k); for (const k of ['eyebrow', 'cta', 'cta_note', 'p1t', 'p1d', 'p2t', 'p2d', 'p3t', 'p3d']) set('#t-' + k.replace('_', '-'), k); set('#t-inputs', 'inputs'); set('#t-orig', 'orig'); set('#t-rev', 'rev');
+  { const [w1, ...w2] = t('title').split(' '); $('#t-title').innerHTML = '<b>' + w1 + '</b><em>' + w2.join(' ') + '</em>'; } set('#t-intro', 'intro'); buildHero(); buildSplash(); for (const k of ['sp_tag', 'sp_cue']) set('#t-' + k.replace('_', '-'), k); for (const k of ['nav_cmp', 'nav_res', 'nav_how']) set('#t-' + k.replace('_', '-'), k); for (const k of ['eyebrow', 'cta', 'cta_note', 'p1t', 'p1d', 'p2t', 'p2d', 'p3t', 'p3d']) set('#t-' + k.replace('_', '-'), k); set('#t-inputs', 'inputs'); set('#t-orig', 'orig'); set('#t-rev', 'rev');
   set('#t-samples', 'samples'); set('#t-limits', 'limits'); set('#viewer-title', 'v_title'); set('#viewer-close', 'v_close');
   $('#btn-compare').textContent = state.busy ? t('comparing') : t('compare');
   for (const b of document.querySelectorAll('[data-sample]')) b.textContent = t('s_' + b.dataset.sample);
@@ -278,8 +278,56 @@ function animateResult() {
 }
 
 /* Le bloc d'intro s'estompe et remonte doucement quand on descend. */
+
+/* ---------- ouverture : le logo voyage jusqu'au header pendant le scroll ---------- */
+function buildSplash() {
+  const el = $('#sp-name'); if (!el) return;
+  const [w1, ...w2] = t('title').split(' ');
+  let i = 0; const word = (txt, c) => '<span class="' + c + '">' + [...txt].map((ch) => '<span class="ch" style="--i:' + (i++) + '">' + ch + '</span>').join('') + '</span>';
+  el.innerHTML = word(w1, 'w1') + word(w2.join(' '), 'w2');
+}
+
+function splash() {
+  const st = $('#stage'); if (!st) return;
+  const root = document.documentElement;
+  if (REDUCED) { st.classList.add('off'); return; }
+  const lg = st.querySelector('.sp-logo'), nm = $('#sp-name'), ct = st.querySelector('.sp-center'), glow = st.querySelector('.sp-glow');
+  const rings = [...st.querySelectorAll('.sp-ring')], tag = st.querySelector('.sp-tag'), cue = $('#sp-cue');
+  let M = null;
+  const measure = () => {   // positions de départ (centre) et d'arrivée (header) de chaque pièce
+    if (scrollY > innerHeight * .6) return;
+    const hi = document.querySelector('.brand img').getBoundingClientRect(), hn = $('#t-title').getBoundingClientRect();
+    const one = (el, tg) => { const sv = el.style.transform; el.style.transform = 'none'; const r = el.getBoundingClientRect(); el.style.transform = sv;
+      return { dx: tg.left + tg.width / 2 - (r.left + r.width / 2), dy: tg.top + tg.height / 2 - (r.top + r.height / 2), s: tg.width / r.width }; };
+    M = { lg: one(lg, hi), nm: one(nm, hn) };
+  };
+  const smooth = (x) => x * x * (3 - 2 * x), clamp = (x) => Math.min(1, Math.max(0, x));
+  let tick = false;
+  const upd = () => {
+    tick = false; if (!M) measure(); if (!M) { root.style.setProperty('--sp', 1); return; }
+    const p = clamp(scrollY / (innerHeight * .5)), e = smooth(p);
+    root.style.setProperty('--sp', p.toFixed(3));
+    const arc = Math.sin(Math.PI * e) * -34;
+    lg.style.transform = 'translate3d(' + M.lg.dx * e + 'px,' + (M.lg.dy * e + arc) + 'px,0) scale(' + (1 + (M.lg.s - 1) * e) + ') rotate(' + (-e * 360 * 0) + 'deg)';
+    nm.style.transform = 'translate3d(' + M.nm.dx * e + 'px,' + (M.nm.dy * e - arc * .5) + 'px,0) scale(' + (1 + (M.nm.s - 1) * e) + ')';
+    const out = 1 - clamp((p - .9) * 10);
+    lg.style.opacity = nm.style.opacity = out;
+    tag.style.setProperty('--fo', Math.max(0, 1 - p * 4)); cue.style.setProperty('--fo', Math.max(0, 1 - p * 5));
+    glow.style.transform = 'scale(' + (1 + p * .9) + ')'; glow.style.setProperty('--fo', Math.max(0, 1 - p * 1.4));
+    rings.forEach((r, i) => { r.style.scale = 1 + p * (.5 + i * .3); r.style.setProperty('--fo', Math.max(0, 1 - p * 1.6)); });
+    st.style.visibility = p >= 1 && scrollY > innerHeight * 1.8 ? 'hidden' : '';
+  };
+  const req = () => { if (!tick) { tick = true; requestAnimationFrame(upd); } };
+  addEventListener('scroll', req, { passive: true });
+  addEventListener('resize', () => { M = null; req(); });
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { M = null; upd(); });
+  root.style.setProperty('--sp', 0); upd();
+  window.__spMeasure = () => { M = null; req(); };
+}
+
 function heroScroll() {
   if (REDUCED) return;
+  const stageEnd = () => { const st = $('#stage'); return st ? st.offsetHeight - innerHeight * .3 : 0; };
   const hc = document.querySelector('.hero-copy');
   let tick = false;
   let ptick = false;   // le titre suit très légèrement le pointeur (inclinaison 3D)
@@ -292,7 +340,7 @@ function heroScroll() {
   hdr(); addEventListener('scroll', hdr, { passive: true });
   addEventListener('scroll', () => {
     if (tick) return; tick = true;
-    requestAnimationFrame(() => { hc.style.setProperty('--hp', Math.min(1, Math.max(0, scrollY / 520)).toFixed(3)); tick = false; });
+    requestAnimationFrame(() => { hc.style.setProperty('--hp', Math.min(1, Math.max(0, (scrollY - stageEnd()) / 520)).toFixed(3)); tick = false; });
   }, { passive: true });
 }
 
@@ -608,6 +656,9 @@ function init() {
   $('#viewer-close').addEventListener('click', () => $('#viewer').close());
   $('#viewer').addEventListener('click', (e) => { if (e.target === $('#viewer')) $('#viewer').close(); });
   applyStatic();
-  animateHero(); animateWindow(); heroScroll();
+  splash();
+  if (!REDUCED && scrollY < innerHeight * .3) addEventListener('scroll', function f() { if (scrollY > innerHeight * .3) { removeEventListener('scroll', f); animateHero(); } }, { passive: true });
+  else animateHero();
+  animateWindow(); heroScroll();
 }
 init();
