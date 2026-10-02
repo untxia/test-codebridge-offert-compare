@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Offer Compare">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8E9BFF"/><stop offset="1" stop-color="#4C5CF0"/></linearGradient>
+  </defs>
+  <rect x="6" y="10" width="34" height="44" rx="6" fill="none" stroke="#8E9BFF" stroke-width="3" opacity=".7"/>
+  <g transform="rotate(8 40 34)">
+    <rect x="22" y="8" width="34" height="46" rx="6" fill="url(#g)"/>
+    <rect x="29" y="18" width="20" height="3.5" rx="1.75" fill="#fff" opacity=".55"/>
+    <rect x="27" y="27" width="24" height="7" rx="2.5" fill="#FFD23F"/>
+    <rect x="29" y="40" width="14" height="3.5" rx="1.75" fill="#fff" opacity=".55"/>
+  </g>
+  <path d="M10 44l5-8 5 8z" fill="#FFD23F"/>
+</svg>

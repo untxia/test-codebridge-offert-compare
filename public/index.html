@@ -1,17 +1,19 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Crect width=%2716%27 height=%2716%27 rx=%273%27 fill=%27%231d4ed8%27/%3E%3C/svg%3E">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Offer Compare</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="theme-color" content="#0A0F1F">
+  <link rel="preload" href="vendor/fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <meta name="description" content="Compare deux versions d'une offre commerciale (PDF) et montre les changements de fond, avec leurs sources.">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="vendor/tailwind.css">
 </head>
 <body>
   <header class="top">
     <div class="wrap top-in">
-      <h1 id="t-title">Offer Compare</h1>
+      <h1 class="brand"><img src="assets/logo.svg" alt="" width="36" height="36"><span id="t-title">Offer Compare</span></h1>
       <div class="lang" role="group" aria-label="Language / Langue">
         <button type="button" data-lang="fr" aria-pressed="false">FR</button>
         <button type="button" data-lang="en" aria-pressed="false">EN</button>
@@ -19,8 +21,15 @@
     </div>
   </header>
 
-  <main class="wrap">
-    <p id="t-intro" class="intro"></p>
+  <section class="hero" aria-label="Offer Compare">
+    <div class="wrap hero-copy">
+      <h2 id="t-hero"></h2>
+      <p id="t-intro" class="intro"></p>
+    </div>
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  </section>
+
+  <main class="wrap -mt-10 relative z-10">
 
     <section class="card" aria-labelledby="t-inputs">
       <h2 id="t-inputs"></h2>
@@ -65,5 +74,6 @@
 
   <script src="vendor/pdf.min.js"></script>
   <script src="app.js"></script>
+  <script type="module" src="vendor/hero.js"></script>
 </body>
 </html>

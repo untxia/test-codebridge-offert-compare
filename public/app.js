@@ -4,6 +4,7 @@
 const I18N = {
   fr: {
     title: 'Offer Compare',
+    hero: 'Ce qui a vraiment changé entre deux offres, avec la preuve dans chaque document.',
     intro: "Déposez l'offre d'origine et sa révision (PDF texte). L'outil liste les changements de fond — périmètre, quantités, prix unitaires, totaux, dates de livraison — chacun avec son emplacement dans les deux documents. Rien à ressaisir.",
     inputs: 'Documents', orig: 'Offre originale', rev: 'Offre révisée', choose: 'Cliquer ou déposer un PDF',
     compare: 'Comparer', comparing: 'Analyse en cours…', samples: 'Essayer avec un exemple :',
@@ -58,6 +59,7 @@ const I18N = {
   },
   en: {
     title: 'Offer Compare',
+    hero: 'What really changed between two offers, with the proof in each document.',
     intro: 'Drop the original offer and its revision (text PDFs). The tool lists the substantive changes — scope, quantities, unit prices, totals, delivery dates — each with its location in both documents. Nothing to retype.',
     inputs: 'Documents', orig: 'Original offer', rev: 'Revised offer', choose: 'Click or drop a PDF',
     compare: 'Compare', comparing: 'Analysing…', samples: 'Try an example:',
@@ -161,7 +163,7 @@ function applyStatic() {
   document.documentElement.lang = lang;
   document.title = t('title');
   const set = (id, k) => { $(id).textContent = t(k); };
-  set('#t-title', 'title'); set('#t-intro', 'intro'); set('#t-inputs', 'inputs'); set('#t-orig', 'orig'); set('#t-rev', 'rev');
+  set('#t-title', 'title'); set('#t-intro', 'intro'); set('#t-hero', 'hero'); set('#t-inputs', 'inputs'); set('#t-orig', 'orig'); set('#t-rev', 'rev');
   set('#t-samples', 'samples'); set('#t-limits', 'limits'); set('#viewer-title', 'v_title'); set('#viewer-close', 'v_close');
   $('#btn-compare').textContent = state.busy ? t('comparing') : t('compare');
   for (const b of document.querySelectorAll('[data-sample]')) b.textContent = t('s_' + b.dataset.sample);
@@ -399,7 +401,7 @@ async function renderPage(side, src) {
 function openViewer(change) {
   const dlg = $('#viewer');
   const s = change.sources || {};
-  if (!dlg.open) dlg.showModal();
+  if (!dlg.open) { dlg.showModal(); dlg.classList.remove('fly'); void dlg.offsetWidth; dlg.classList.add('fly'); }
   renderPage('original', s.original);
   renderPage('revised', s.revised);
 }
@@ -417,6 +419,15 @@ function init() {
   $('#btn-compare').addEventListener('click', runCompare);
   for (const b of document.querySelectorAll('[data-sample]')) b.addEventListener('click', () => loadSample(b.dataset.sample));
   for (const b of document.querySelectorAll('[data-lang]')) b.addEventListener('click', () => { lang = b.dataset.lang; applyStatic(); if (state.report) renderReport(); });
+  const win = $('#viewer');   // fenêtre volante : légère inclinaison 3D qui suit le pointeur (désactivée si mouvement réduit)
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
+  win.addEventListener('pointermove', (e) => {
+    if (calm.matches) return;
+    const r = win.getBoundingClientRect();
+    win.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 3).toFixed(2) + 'deg');
+    win.style.setProperty('--rx', ((.5 - (e.clientY - r.top) / r.height) * 2).toFixed(2) + 'deg');
+  });
+  win.addEventListener('pointerleave', () => { win.style.setProperty('--ry', '0deg'); win.style.setProperty('--rx', '0deg'); });
   $('#viewer-close').addEventListener('click', () => $('#viewer').close());
   $('#viewer').addEventListener('click', (e) => { if (e.target === $('#viewer')) $('#viewer').close(); });
   applyStatic();

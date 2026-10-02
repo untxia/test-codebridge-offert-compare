@@ -18,8 +18,8 @@
    "bbox_checked": 9,
    "bbox_text_ok": 9,
    "non_commercial_listed": 3,
-   "ms_median": 119.6,
-   "ms_max": 132.4
+   "ms_median": 178.4,
+   "ms_max": 253.5
   },
   {
    "scenario": "S2_formatting_only",
@@ -39,8 +39,8 @@
    "bbox_checked": 0,
    "bbox_text_ok": 0,
    "non_commercial_listed": 3,
-   "ms_median": 135.0,
-   "ms_max": 151.2
+   "ms_median": 198.3,
+   "ms_max": 262.6
   },
   {
    "scenario": "S3_ambiguous",
@@ -60,8 +60,8 @@
    "bbox_checked": 4,
    "bbox_text_ok": 4,
    "non_commercial_listed": 3,
-   "ms_median": 135.0,
-   "ms_max": 167.5
+   "ms_median": 185.5,
+   "ms_max": 265.2
   },
   {
    "scenario": "S4_unreadable",
@@ -81,8 +81,8 @@
    "bbox_checked": 0,
    "bbox_text_ok": 0,
    "non_commercial_listed": 0,
-   "ms_median": 59.7,
-   "ms_max": 83.1
+   "ms_median": 81.0,
+   "ms_max": 126.4
   }
  ],
  "totals": {
@@ -105,7 +105,7 @@
    "false_changes": [],
    "uncertain": 0,
    "arithmetic": 0,
-   "ms": 52.8
+   "ms": 74.9
   },
   {
    "doc": "h2",
@@ -116,7 +116,7 @@
    "false_changes": [],
    "uncertain": 0,
    "arithmetic": 0,
-   "ms": 48.2
+   "ms": 67.5
   }
  ],
  "repeats": 5
