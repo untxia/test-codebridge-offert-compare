@@ -419,6 +419,13 @@ function init() {
   $('#btn-compare').addEventListener('click', runCompare);
   for (const b of document.querySelectorAll('[data-sample]')) b.addEventListener('click', () => loadSample(b.dataset.sample));
   for (const b of document.querySelectorAll('[data-lang]')) b.addEventListener('click', () => { lang = b.dataset.lang; applyStatic(); if (state.report) renderReport(); });
+  const app = $('#app-window');   // fenêtre principale : même inclinaison 3D, plus discrète
+  if (app && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    addEventListener('pointermove', (e) => {
+      app.style.setProperty('--wy', ((e.clientX / innerWidth - .5) * 4).toFixed(2) + 'deg');
+      app.style.setProperty('--wx', ((.5 - e.clientY / innerHeight) * 2.5).toFixed(2) + 'deg');
+    }, { passive: true });
+  }
   const win = $('#viewer');   // fenêtre volante : légère inclinaison 3D qui suit le pointeur (désactivée si mouvement réduit)
   const calm = matchMedia('(prefers-reduced-motion: reduce)');
   win.addEventListener('pointermove', (e) => {
