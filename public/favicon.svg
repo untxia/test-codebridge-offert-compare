@@ -1,13 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Offer Compare">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8E9BFF"/><stop offset="1" stop-color="#4C5CF0"/></linearGradient>
-  </defs>
-  <rect x="6" y="10" width="34" height="44" rx="6" fill="none" stroke="#8E9BFF" stroke-width="3" opacity=".7"/>
-  <g transform="rotate(8 40 34)">
-    <rect x="22" y="8" width="34" height="46" rx="6" fill="url(#g)"/>
-    <rect x="29" y="18" width="20" height="3.5" rx="1.75" fill="#fff" opacity=".55"/>
-    <rect x="27" y="27" width="24" height="7" rx="2.5" fill="#FFD23F"/>
-    <rect x="29" y="40" width="14" height="3.5" rx="1.75" fill="#fff" opacity=".55"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1c2250"/><stop offset="1" stop-color="#0a0e28"/></linearGradient>
+    <linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4adea8"/><stop offset="1" stop-color="#2a8fd8"/></linearGradient>
+    <linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9b6ff"/><stop offset="1" stop-color="#5565f2"/></linearGradient>
+    <linearGradient id="c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe066"/><stop offset="1" stop-color="#ff9a3f"/></linearGradient>
+    <filter id="s" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0a0e28" flood-opacity=".45"/></filter>
+  </defs><rect width="64" height="64" rx="15" fill="url(#bg)"/><g transform="translate(6 6) scale(.81)">
+  <g transform="rotate(-9 22 34)" filter="url(#s)">
+    <rect x="5" y="11" width="30" height="42" rx="6" fill="url(#a)"/>
+    <rect x="11" y="20" width="16" height="3" rx="1.5" fill="#fff" opacity=".6"/>
+    <rect x="11" y="27" width="18" height="3" rx="1.5" fill="#fff" opacity=".6"/>
+    <rect x="11" y="34" width="12" height="3" rx="1.5" fill="#fff" opacity=".6"/>
   </g>
-  <path d="M10 44l5-8 5 8z" fill="#FFD23F"/>
-</svg>
+  <g transform="rotate(8 42 33)" filter="url(#s)">
+    <rect x="25" y="7" width="33" height="46" rx="6" fill="url(#b)"/>
+    <rect x="25.75" y="7.75" width="31.5" height="44.5" rx="5.3" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1.5"/>
+    <rect x="32" y="17" width="19" height="3.5" rx="1.75" fill="#fff" opacity=".6"/>
+    <rect x="31" y="26" width="21" height="8" rx="3" fill="url(#c)"/>
+    <rect x="32" y="41" width="13" height="3.5" rx="1.75" fill="#fff" opacity=".6"/>
+  </g>
+  <circle cx="49" cy="49" r="9" fill="#10142e"/>
+  <path d="M49 42.8l5.6 9.4h-11.2z" fill="url(#c)" stroke="url(#c)" stroke-width="1.6" stroke-linejoin="round"/>
+
+</g></svg>
