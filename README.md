@@ -1,5 +1,8 @@
 # Offer Compare — commercial offer comparison (AI-First Product Builder take-home)
 
+**Live demo:** https://test-codebridge-offert-compare.vercel.app  
+**Repo:** https://github.com/untxia/test-codebridge-offert-compare
+
 Upload an original commercial offer and its revision (two text PDFs). The app lists the **substantive** changes
 (scope, quantities, unit prices, totals, delivery dates), each with a clickable reference to **both** locations
 (page, line, highlighted area in the PDF). No line item is retyped.
@@ -41,7 +44,7 @@ python3 evaluation/holdout/make_holdout.py      # regenerate the hold-out pairs 
 
 ## Deploy (Vercel)
 
-`vercel.json` + `requirements.txt` + `api/index.py` (FastAPI) + `public/` (static). `vercel --prod` from this folder.
+`vercel.json` + `requirements.txt` + `api/index.py` (FastAPI) + `public/` (static). `vercel --prod` from this folder, or import the GitHub repo in Vercel with the **Other** preset (the config is in `vercel.json`).
 
 ## Reused components / limits
 
