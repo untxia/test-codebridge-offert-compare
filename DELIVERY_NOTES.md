@@ -20,6 +20,8 @@ Fields marked **[Chris]** must be filled in by the author before submitting (I c
 | S4 | decline | decline (`no_text_layer_revised`) |
 | H1, H2 | 6 changes each, 0 false | 6/6, 0 false (after the fixes in §4) |
 
+Other formats: the S0→S1 pair also exists as xlsx, docx, ods, csv, html, md, txt and json (`testset/formats/`); `tests/test_formats.py` checks each gives exactly the PDF result and that mixed pairs (Excel vs Word, PDF vs Excel, JSON vs PDF) do too, with an Excel cell reference or table/row/line reference for each source. Same caveat: samples are mine.
+
 Missed changes: **0/7** on S1–S4, **0/12** on hold-out (after fixes). False changes: **0**. Source references: 13/13 cite the expected page + line + label on both sides, and 13/13 bounding boxes contain the cited text/amount when re-read from the PDF independently (pdfplumber crop).
 **Caveat:** I (with AI help) wrote both the samples and the answer keys. Zero errors on them says the pipeline is consistent, not that it works on arbitrary supplier PDFs. Real-world layouts are untested.
 

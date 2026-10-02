@@ -14,6 +14,7 @@ from typing import Dict, List, Optional, Tuple
 
 import pdfplumber
 
+from . import readers
 from .models import BBox, Item, Money, Offer, PageInfo, Totals
 from .parsing import (MONEY_TAIL_RE, clean_spaces, detect_currencies, norm, parse_date, parse_money,
                       parse_qty)
@@ -218,37 +219,48 @@ def _lines(page) -> List[Tuple[str, List[dict], List[Tuple[int, int]]]]:
     return out
 
 
-def _extract_totals(pdf) -> Totals:
+def _totals_from(entries) -> Totals:
+    """entries : (texte de la ligne, fonction(match) -> BBox de la valeur). La dernière occurrence gagne."""
     tot = Totals()
-    for page in pdf.pages:
-        for text, words, spans in _lines(page):
-            n = norm(text)
-            n = re.sub(r"\bh t\b", "ht", n)
-            n = re.sub(r"\bt t c\b", "ttc", n)
-            if re.match(r"(total|montant) (ttc|toutes taxes)|net a payer|total a payer|grand total|total due|amount due|balance due|total (incl|including|with)\b", n):
-                key = "ttc"
-            elif re.match(r"(sous )?(total|montant) (ht|hors tax)|sub ?total\b|net total|total (excl|excluding|before|ex)\b", n):
-                key = "ht"
-            elif re.match(r"(tva|vat|taxe|sales tax|tax)\b", n):
-                key = "vat"
-            else:
-                continue
-            m = MONEY_TAIL_RE.search(text)
-            if not m:
-                continue
-            val = parse_money(m.group(0))
-            if val is None:
-                continue
-            hit = [w for w, (a, b) in zip(words, spans) if b > m.start()]
-            box = BBox(page.page_number, round(min(w["x0"] for w in hit), 2), round(min(w["top"] for w in hit), 2),
-                       round(max(w["x1"] for w in hit), 2), round(max(w["bottom"] for w in hit), 2))
-            setattr(tot, key, Money(val, clean_spaces(m.group(0)), box))   # la dernière occurrence gagne
-            if key == "vat":
-                r = re.search(r"(\d+(?:[.,]\d+)?)\s*%", text)
-                if r:
-                    tot.vat_rate = Decimal(r.group(1).replace(",", ".")) / 100
+    for text, box_of in entries:
+        n = norm(text)
+        n = re.sub(r"\bh t\b", "ht", n)
+        n = re.sub(r"\bt t c\b", "ttc", n)
+        if re.match(r"(total|montant) (ttc|toutes taxes)|net a payer|total a payer|grand total|total due|amount due|balance due|total (incl|including|with)\b", n):
+            key = "ttc"
+        elif re.match(r"(sous )?(total|montant) (ht|hors tax)|sub ?total\b|net total|total (excl|excluding|before|ex)\b", n):
+            key = "ht"
+        elif re.match(r"(tva|vat|taxe|sales tax|tax)\b", n):
+            key = "vat"
+        else:
+            continue
+        m = MONEY_TAIL_RE.search(text)
+        if not m:
+            continue
+        val = parse_money(m.group(0))
+        if val is None:
+            continue
+        if key == "vat" and re.match(r"(tva|vat|tax|taxe) (rate|taux)\b", n) and "%" not in text:   # champ « taux », pas un montant
+            tot.vat_rate = val if val <= 1 else val / 100
+            continue
+        setattr(tot, key, Money(val, clean_spaces(m.group(0)), box_of(m)))
+        if key == "vat":
+            r = re.search(r"(\d+(?:[.,]\d+)?)\s*%", text)
+            if r:
+                tot.vat_rate = Decimal(r.group(1).replace(",", ".")) / 100
     return tot
 
+
+def _extract_totals(pdf) -> Totals:
+    def entries():
+        for page in pdf.pages:
+            for text, words, spans in _lines(page):
+                def box_of(m, page=page, words=words, spans=spans):
+                    hit = [w for w, (a, b) in zip(words, spans) if b > m.start()]
+                    return BBox(page.page_number, round(min(w["x0"] for w in hit), 2), round(min(w["top"] for w in hit), 2),
+                                round(max(w["x1"] for w in hit), 2), round(max(w["bottom"] for w in hit), 2))
+                yield text, box_of
+    return _totals_from(entries())
 
 
 _NUMERIC_DATE = re.compile(r"^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})$")
@@ -278,8 +290,97 @@ def _fix_date_convention(offer: Offer, text: str) -> None:
                 it.delivery, it.delivery_is_date = iso, True
 
 
+def _gref(g: "readers.Grid", r: int, c0: int, c1: int) -> Optional[str]:
+    """Référence lisible de la zone (r, c0..c1) : A1 pour Excel/ODS, nom de la clé pour un champ JSON."""
+    if g.style == "a1":
+        a, b = readers.col_letter(c0), readers.col_letter(c1)
+        return f"{g.ref_prefix}!{a}{r + 1}" if c0 == c1 else f"{g.ref_prefix}!{a}{r + 1}:{b}{r + 1}"
+    if g.style == "field":
+        return g.rows[r][0]
+    return None
+
+
+def _gbox(g, gi: int, r: int, c0: int, c1: Optional[int] = None) -> BBox:
+    c1 = c0 if c1 is None else c1
+    return BBox(gi, c0, r, c1 + 1, r + 1, _gref(g, r, c0, c1))
+
+
+def _extract_items_grids(grids) -> Tuple[List[Item], set]:
+    items: List[Item] = []
+    roles_seen: set = set()
+    for gi, g in enumerate(grids, 1):
+        colmap = None
+        for r, cells in enumerate(g.rows):
+            hm = _header_map(cells)
+            if hm:
+                colmap = hm
+                roles_seen |= set(hm.values())
+                continue
+            if not colmap:
+                continue
+            raw = {role: cells[i] for i, role in colmap.items() if i < len(cells)}
+            boxes = {role: _gbox(g, gi, r, i) for i, role in colmap.items() if i < len(cells)}
+            it = _build_item(len(items) + 1, gi, raw, boxes)
+            if it:
+                it.bbox = _gbox(g, gi, r, 0, len(cells) - 1)
+                items.append(it)
+    return items, roles_seen
+
+
+def _totals_grids(grids) -> Totals:
+    def entries():
+        for gi, g in enumerate(grids, 1):
+            for r, cells in enumerate(g.rows):
+                idx = [i for i, c in enumerate(cells) if c]
+                if not idx:
+                    continue
+                text = " ".join(cells[i] for i in idx)
+                last = idx[-1]
+                yield text, (lambda m, g=g, gi=gi, r=r, last=last: _gbox(g, gi, r, last))
+    return _totals_from(entries())
+
+
+def _extract_grid_offer(path: str, display_name: Optional[str], data: bytes) -> Offer:
+    t0 = time.perf_counter()
+    ld = readers.load(data, display_name or path)
+    grids = ld.grids
+    infos = [PageInfo(i, float(len(g.rows[0]) if g.rows else 0), float(len(g.rows)), True, 0) for i, g in enumerate(grids, 1)]
+    offer = Offer(file=display_name or path, pages=infos, has_text_layer=bool(grids), items=[], totals=Totals(), currency=None,
+                  currencies_seen={}, method="none", kind=ld.kind, warnings=list(ld.warnings))
+    offer.preview = {"kind": ld.kind, "tables": [{"name": g.name, "style": g.style, "rows": g.rows[:300]} for g in grids]}
+    if not grids:
+        if ld.kind != "image":
+            offer.warnings.append("Aucun contenu lisible dans ce fichier.")
+        offer.elapsed_ms = round((time.perf_counter() - t0) * 1000, 1)
+        return offer
+    text = " ".join(c for g in grids for row in g.rows for c in row if c) + " " + ld.hints
+    items, roles = _extract_items_grids(grids)
+    offer.items, offer.method = items, f"{ld.kind}/grid"
+    offer.totals = _totals_grids(grids)
+    _fix_date_convention(offer, text)
+    offer.currencies_seen = detect_currencies(text)
+    if offer.currencies_seen:
+        offer.currency = max(offer.currencies_seen, key=offer.currencies_seen.get)
+    if len(offer.currencies_seen) > 1:
+        offer.warnings.append(f"Plusieurs devises détectées : {offer.currencies_seen}.")
+    if not items:
+        offer.warnings.append("Aucun tableau de lignes reconnu (en-têtes de colonnes introuvables).")
+    else:
+        for r_ in ("qty", "unit_price", "line_total"):
+            if r_ not in roles:
+                offer.warnings.append(f"Colonne « {r_} » non reconnue dans l'en-tête du tableau.")
+    if offer.totals.ht is None:
+        offer.warnings.append("Total HT introuvable.")
+    offer.elapsed_ms = round((time.perf_counter() - t0) * 1000, 1)
+    return offer
+
+
 def extract_offer(path: str, display_name: Optional[str] = None) -> Offer:
     t0 = time.perf_counter()
+    with open(path, "rb") as fh:
+        data = fh.read()
+    if readers.detect_kind(data, display_name or path) != "pdf":
+        return _extract_grid_offer(path, display_name, data)
     with pdfplumber.open(path) as pdf:
         infos: List[PageInfo] = []
         all_text = []

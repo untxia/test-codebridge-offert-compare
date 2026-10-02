@@ -1,0 +1,75 @@
+{
+  "reference": "OFF-2026-0412",
+  "currency": "EUR",
+  "lines": [
+    {
+      "no": 1,
+      "description": "Ordinateur portable 15 pouces Pro",
+      "quantity": "10",
+      "unit_price": 1150.0,
+      "line_total": 11500.0,
+      "delivery_date": "2026-11-16"
+    },
+    {
+      "no": 2,
+      "description": "Écran 27 pouces QHD",
+      "quantity": "10",
+      "unit_price": 280.0,
+      "line_total": 2800.0,
+      "delivery_date": "2026-11-16"
+    },
+    {
+      "no": 3,
+      "description": "Station d'accueil USB-C",
+      "quantity": "10",
+      "unit_price": 135.0,
+      "line_total": 1350.0,
+      "delivery_date": "2026-11-16"
+    },
+    {
+      "no": 4,
+      "description": "Clavier et souris sans fil",
+      "quantity": "10",
+      "unit_price": 45.0,
+      "line_total": 450.0,
+      "delivery_date": "2026-11-16"
+    },
+    {
+      "no": 5,
+      "description": "Switch réseau 24 ports",
+      "quantity": "2",
+      "unit_price": 320.0,
+      "line_total": 640.0,
+      "delivery_date": "2026-11-20"
+    },
+    {
+      "no": 6,
+      "description": "Borne Wi-Fi 6",
+      "quantity": "4",
+      "unit_price": 180.0,
+      "line_total": 720.0,
+      "delivery_date": "2026-11-20"
+    },
+    {
+      "no": 7,
+      "description": "Installation et configuration",
+      "quantity": "12 h",
+      "unit_price": 70.0,
+      "line_total": 840.0,
+      "delivery_date": "2026-11-23"
+    },
+    {
+      "no": 8,
+      "description": "Garantie 3 ans sur site",
+      "quantity": "10",
+      "unit_price": 60.0,
+      "line_total": 600.0,
+      "delivery_date": "À réception"
+    }
+  ],
+  "totals": {
+    "total_ht": 18900.0,
+    "vat": 3780.0,
+    "total_ttc": 22680.0
+  }
+}

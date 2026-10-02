@@ -1,0 +1,16 @@
+# OFFRE COMMERCIALE
+
+| N° | Désignation | Qté | Prix unitaire HT | Total HT | Livraison |
+|---|---|---|---|---|---|
+| 1 | Ordinateur portable 15 pouces Pro | 10 | 1 150,00 € | 11 500,00 € | 16/11/2026 |
+| 2 | Écran 27 pouces QHD | 10 | 280,00 € | 2 800,00 € | 16/11/2026 |
+| 3 | Station d'accueil USB-C | 10 | 135,00 € | 1 350,00 € | 16/11/2026 |
+| 4 | Clavier et souris sans fil | 10 | 45,00 € | 450,00 € | 16/11/2026 |
+| 5 | Switch réseau 24 ports | 2 | 320,00 € | 640,00 € | 20/11/2026 |
+| 6 | Borne Wi-Fi 6 | 4 | 180,00 € | 720,00 € | 20/11/2026 |
+| 7 | Installation et configuration | 12 h | 70,00 € | 840,00 € | 23/11/2026 |
+| 8 | Garantie 3 ans sur site | 10 | 60,00 € | 600,00 € | À réception |
+
+**Total HT** : 18 900,00 €
+**TVA 20 %** : 3 780,00 €
+**Total TTC** : 22 680,00 €

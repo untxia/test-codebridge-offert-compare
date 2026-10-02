@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta name="theme-color" content="#0A0F1F">
   <link rel="preload" href="vendor/fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <meta name="description" content="Compare deux versions d'une offre commerciale (PDF) et montre les changements de fond, avec leurs sources.">
+  <meta name="description" content="Compare deux versions d'une offre commerciale (PDF, Word, Excel, CSV...) et montre les changements de fond, avec leurs sources.">
   <link rel="stylesheet" href="vendor/tailwind.css">
 </head>
 <body>
@@ -38,12 +38,12 @@
         <label class="drop" id="drop-original" for="file-original">
           <span class="drop-title" id="t-orig"></span>
           <span class="drop-file" id="name-original"></span>
-          <input type="file" id="file-original" accept="application/pdf,.pdf">
+          <input type="file" id="file-original" accept=".pdf,.docx,.xlsx,.ods,.odt,.csv,.tsv,.html,.htm,.json,.txt,.md">
         </label>
         <label class="drop" id="drop-revised" for="file-revised">
           <span class="drop-title" id="t-rev"></span>
           <span class="drop-file" id="name-revised"></span>
-          <input type="file" id="file-revised" accept="application/pdf,.pdf">
+          <input type="file" id="file-revised" accept=".pdf,.docx,.xlsx,.ods,.odt,.csv,.tsv,.html,.htm,.json,.txt,.md">
         </label>
       </div>
       <div class="actions">
@@ -53,6 +53,7 @@
           <button type="button" class="link" data-sample="format"></button>
           <button type="button" class="link" data-sample="ambiguous"></button>
           <button type="button" class="link" data-sample="scanned"></button>
+          <button type="button" class="link" data-sample="mixed"></button>
         </span>
       </div>
       <p id="t-limits" class="hint"></p>

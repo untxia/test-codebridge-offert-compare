@@ -1,0 +1,67 @@
+{
+  "reference": "OFF-2026-0412",
+  "currency": "EUR",
+  "lines": [
+    {
+      "no": 1,
+      "description": "Écran 27 pouces QHD",
+      "quantity": "10",
+      "unit_price": 295.0,
+      "line_total": 2950.0,
+      "delivery_date": "2026-11-16"
+    },
+    {
+      "no": 2,
+      "description": "PC portable professionnel 15 pouces",
+      "quantity": "10",
+      "unit_price": 1150.0,
+      "line_total": 11500.0,
+      "delivery_date": "2026-11-16"
+    },
+    {
+      "no": 3,
+      "description": "Station d'accueil USB-C",
+      "quantity": "10",
+      "unit_price": 135.0,
+      "line_total": 1350.0,
+      "delivery_date": "2026-11-30"
+    },
+    {
+      "no": 4,
+      "description": "Borne Wi-Fi 6",
+      "quantity": "6",
+      "unit_price": 180.0,
+      "line_total": 1080.0,
+      "delivery_date": "2026-11-20"
+    },
+    {
+      "no": 5,
+      "description": "Switch réseau 24 ports",
+      "quantity": "2",
+      "unit_price": 320.0,
+      "line_total": 640.0,
+      "delivery_date": "2026-11-20"
+    },
+    {
+      "no": 6,
+      "description": "Installation et configuration",
+      "quantity": "12 h",
+      "unit_price": 70.0,
+      "line_total": 840.0,
+      "delivery_date": "2026-11-23"
+    },
+    {
+      "no": 7,
+      "description": "Garantie 3 ans sur site",
+      "quantity": "10",
+      "unit_price": 60.0,
+      "line_total": 600.0,
+      "delivery_date": "À réception"
+    }
+  ],
+  "totals": {
+    "total_ht": 19060.0,
+    "vat": 3812.0,
+    "total_ttc": 22872.0
+  }
+}

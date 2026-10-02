@@ -2,6 +2,7 @@
 Sans état : rien n'est conservé côté serveur (fichiers temporaires supprimés après traitement)."""
 import json
 import os
+import re
 import sys
 import tempfile
 from typing import Optional
@@ -11,6 +12,7 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from offercompare.diff import compare_files  # noqa: E402
+from offercompare.readers import UnsupportedFormat  # noqa: E402
 
 MAX_BYTES = 2 * 1024 * 1024      # 2 Mo par fichier (limite de corps de requête des fonctions serverless : 4,5 Mo)
 app = FastAPI(title="offer-compare", docs_url=None, redoc_url=None)
@@ -34,9 +36,11 @@ async def _save(up: UploadFile, td: str, tag: str) -> str:
     data = await up.read()
     if len(data) > MAX_BYTES:
         raise HTTPException(413, f"{tag} : fichier trop volumineux (max {MAX_BYTES // 1024 // 1024} Mo)")
-    if not data.startswith(b"%PDF"):
-        raise HTTPException(400, f"{tag} : ce n'est pas un PDF")
-    path = os.path.join(td, f"{tag}.pdf")
+    if not data:
+        raise HTTPException(400, f"{tag} : fichier vide")
+    ext = os.path.splitext(up.filename or "")[1].lower()
+    ext = ext if re.fullmatch(r"\.[a-z0-9]{1,5}", ext) else ""
+    path = os.path.join(td, f"{tag}{ext}")
     with open(path, "wb") as fh:
         fh.write(data)
     return path
@@ -53,9 +57,11 @@ async def compare(original: UploadFile = File(...), revised: UploadFile = File(.
     with tempfile.TemporaryDirectory() as td:
         po, pr = await _save(original, td, "original"), await _save(revised, td, "revised")
         try:
-            return compare_files(po, pr, ov, names={"original": original.filename or "original.pdf",
-                                                    "revised": revised.filename or "revised.pdf"})
+            return compare_files(po, pr, ov, names={"original": original.filename or "original",
+                                                    "revised": revised.filename or "revised"})
         except HTTPException:
             raise
+        except UnsupportedFormat as e:
+            raise HTTPException(415, str(e))
         except Exception as e:   # PDF corrompu, chiffré...
-            raise HTTPException(422, f"Lecture impossible : {type(e).__name__}")
+            raise HTTPException(422, f"Lecture impossible ({type(e).__name__}) : fichier corrompu, protégé ou format inattendu.")

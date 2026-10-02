@@ -30,7 +30,15 @@ def d(x: Optional[Decimal]) -> Optional[str]:
 
 
 def _box(b: Optional[BBox]) -> Optional[Dict]:
-    return None if b is None else {"page": b.page, "x0": b.x0, "top": b.top, "x1": b.x1, "bottom": b.bottom}
+    return None if b is None else {"page": b.page, "x0": b.x0, "top": b.top, "x1": b.x1, "bottom": b.bottom, "ref": b.ref}
+
+
+def _where(offer: Offer, page: Optional[int]) -> Dict:
+    """Formats non PDF : nom et style d'emplacement de la grille (feuille, tableau, texte...)."""
+    if offer.preview is None or not page or page > len(offer.preview["tables"]):
+        return {}
+    t = offer.preview["tables"][page - 1]
+    return {"kind": offer.kind, "grid": t["name"], "style": t["style"]}
 
 
 def _amount(it: Item) -> Optional[Decimal]:
@@ -63,14 +71,16 @@ def _vals(it: Item) -> Dict:
 def _src(role: str, offer: Offer, it: Item, field: Optional[str] = None) -> Dict:
     return {"document": role, "file": os.path.basename(offer.file), "page": it.page,
             "row_number": it.printed_no or str(it.index), "label_text": it.label, "bbox": _box(it.bbox),
-            "cell": _box(it.cells.get(field)) if field else None, "raw": it.raw.get(field) if field else None}
+            "cell": _box(it.cells.get(field)) if field else None, "raw": it.raw.get(field) if field else None,
+            **_where(offer, it.page)}
 
 
 def _tsrc(role: str, offer: Offer, m: Optional[Money], key: str) -> Optional[Dict]:
     if m is None:
         return None
     return {"document": role, "file": os.path.basename(offer.file), "page": m.bbox.page if m.bbox else None,
-            "block": "totals", "field": key, "raw": m.raw, "bbox": _box(m.bbox)}
+            "block": "totals", "field": key, "raw": m.raw, "bbox": _box(m.bbox),
+            **_where(offer, m.bbox.page if m.bbox else None)}
 
 
 def _same_delivery(a: Item, b: Item) -> bool:
@@ -142,7 +152,8 @@ def _doc_summary(role: str, offer: Offer) -> Dict:
             "line_items": len(offer.items), "currency": offer.currency, "method": offer.method,
             "stated_totals": {"ht": d(t.ht.value) if t.ht else None, "vat": d(t.vat.value) if t.vat else None,
                               "ttc": d(t.ttc.value) if t.ttc else None, "vat_rate": str(t.vat_rate) if t.vat_rate is not None else None},
-            "recomputed_totals": _recomputed_totals(offer), "warnings": offer.warnings, "extract_ms": offer.elapsed_ms}
+            "recomputed_totals": _recomputed_totals(offer), "warnings": offer.warnings, "extract_ms": offer.elapsed_ms,
+            "kind": offer.kind, "preview": offer.preview}
 
 
 # --- comparaison --------------------------------------------------------------------------------------------------

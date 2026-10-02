@@ -5,11 +5,11 @@ const I18N = {
   fr: {
     title: 'Offer Compare',
     hero: 'Ce qui a vraiment changé entre deux offres, avec la preuve dans chaque document.',
-    intro: "Déposez l'offre d'origine et sa révision (PDF texte). L'outil liste les changements de fond — périmètre, quantités, prix unitaires, totaux, dates de livraison — chacun avec son emplacement dans les deux documents. Rien à ressaisir.",
-    inputs: 'Documents', orig: 'Offre originale', rev: 'Offre révisée', choose: 'Cliquer ou déposer un PDF',
+    intro: "Déposez l'offre d'origine et sa révision (PDF, Word, Excel, CSV, HTML, JSON ou texte). L'outil liste les changements de fond — périmètre, quantités, prix unitaires, totaux, dates de livraison — chacun avec son emplacement dans les deux documents. Rien à ressaisir.",
+    inputs: 'Documents', orig: 'Offre originale', rev: 'Offre révisée', choose: 'Cliquer ou déposer un fichier',
     compare: 'Comparer', comparing: 'Analyse en cours…', samples: 'Essayer avec un exemple :',
-    s_normal: 'cas normal', s_format: 'mise en forme seule', s_ambiguous: 'cas ambigu', s_scanned: 'document scanné',
-    limits: "Périmètre : 2 PDF texte (ni scan ni manuscrit), 3 pages et 10 lignes max, une seule devise, 2 Mo par fichier. Les fichiers ne sont pas conservés.",
+    s_normal: 'cas normal', s_format: 'mise en forme seule', s_ambiguous: 'cas ambigu', s_scanned: 'document scanné', s_mixed: 'Excel vs Word',
+    limits: "Périmètre : 2 documents texte — PDF, Word, Excel, OpenDocument, CSV, HTML, JSON, texte ou Markdown, formats mélangeables (ni scan, ni image, ni manuscrit) —, 3 pages et 10 lignes max, une seule devise, 2 Mo par fichier. Les fichiers ne sont pas conservés.",
     needBoth: 'Choisissez les deux fichiers.',
     err: 'Erreur', errNet: 'Le serveur est injoignable.',
     d_conclude: 'Changements détectés', d_conclude_sub: '{n} changement(s) de fond à examiner.',
@@ -20,8 +20,8 @@ const I18N = {
     d_ask_sub: "Je n'ai pas conclu sur les lignes douteuses. Confirmez-les plus bas : le résultat est recalculé.",
     d_decline: 'Impossible de conclure',
     d_decline_sub: "Je préfère ne rien affirmer plutôt que de risquer un chiffre faux.",
-    r_no_text_layer_original: "L'offre originale n'a pas de texte exploitable (scan ou image). Fournissez un PDF texte.",
-    r_no_text_layer_revised: "L'offre révisée n'a pas de texte exploitable (scan ou image). Fournissez un PDF texte ou confirmez les valeurs à la main.",
+    r_no_text_layer_original: "L'offre originale n'a pas de texte exploitable (scan ou image). Fournissez un fichier texte (PDF texte, Word, Excel...).",
+    r_no_text_layer_revised: "L'offre révisée n'a pas de texte exploitable (scan ou image). Fournissez un fichier texte (PDF texte, Word, Excel...) ou confirmez les valeurs à la main.",
     r_no_line_items_original: "Aucun tableau de lignes reconnu dans l'offre originale.",
     r_no_line_items_revised: "Aucun tableau de lignes reconnu dans l'offre révisée.",
     r_currency_mismatch: 'Les deux offres ne sont pas dans la même devise.',
@@ -54,17 +54,19 @@ const I18N = {
     sec_nc: 'Non signalé comme changement', nc_renamed: 'Ligne renommée', nc_reordered: "L'ordre des lignes a changé.", nc_none: 'Rien.',
     tech: 'Détails techniques', tech_line: 'Lecture {a} ms + {b} ms · comparaison {c} ms · total serveur {d} ms · méthode : {m}',
     warnings: 'Avertissements',
-    v_title: 'Sources du changement', v_close: 'Fermer', v_orig: 'Offre originale — page {p}', v_rev: 'Offre révisée — page {p}',
-    v_absent: 'Cette ligne n\'existe pas dans cette version.', v_fail: "Affichage du PDF impossible dans ce navigateur.",
+    v_title: 'Sources du changement', v_close: 'Fermer', v_orig: 'Offre originale — page {p}', v_rev: 'Offre révisée — page {p}', v_orig_g: 'Offre originale — {p}', v_rev_g: 'Offre révisée — {p}',
+    loc_line: 'ligne {r}', loc_table: '{g}, ligne {r}', loc_item: 'élément {r}', loc_field: 'champ « {k} »', loc_cell: 'cellule {k}',
+    gname: { Tableau: 'Tableau', Texte: 'Texte', Fichier: 'Fichier', 'Éléments': 'Éléments', Champs: 'Champs' },
+    v_absent: 'Cette ligne n\'existe pas dans cette version.', v_fail: "Affichage du document impossible dans ce navigateur.",
   },
   en: {
     title: 'Offer Compare',
     hero: 'What really changed between two offers, with the proof in each document.',
-    intro: 'Drop the original offer and its revision (text PDFs). The tool lists the substantive changes — scope, quantities, unit prices, totals, delivery dates — each with its location in both documents. Nothing to retype.',
-    inputs: 'Documents', orig: 'Original offer', rev: 'Revised offer', choose: 'Click or drop a PDF',
+    intro: 'Drop the original offer and its revision (PDF, Word, Excel, CSV, HTML, JSON or text). The tool lists the substantive changes — scope, quantities, unit prices, totals, delivery dates — each with its location in both documents. Nothing to retype.',
+    inputs: 'Documents', orig: 'Original offer', rev: 'Revised offer', choose: 'Click or drop a file',
     compare: 'Compare', comparing: 'Analysing…', samples: 'Try an example:',
-    s_normal: 'normal case', s_format: 'formatting only', s_ambiguous: 'ambiguous case', s_scanned: 'scanned document',
-    limits: 'Scope: 2 text PDFs (no scans or handwriting), up to 3 pages and 10 line items, a single currency, 2 MB per file. Files are not stored.',
+    s_normal: 'normal case', s_format: 'formatting only', s_ambiguous: 'ambiguous case', s_scanned: 'scanned document', s_mixed: 'Excel vs Word',
+    limits: 'Scope: 2 text documents — PDF, Word, Excel, OpenDocument, CSV, HTML, JSON, text or Markdown, formats can be mixed (no scans, images or handwriting) —, up to 3 pages and 10 line items, a single currency, 2 MB per file. Files are not stored.',
     needBoth: 'Please choose both files.',
     err: 'Error', errNet: 'The server could not be reached.',
     d_conclude: 'Changes found', d_conclude_sub: '{n} substantive change(s) to review.',
@@ -75,8 +77,8 @@ const I18N = {
     d_ask_sub: 'I did not conclude on the doubtful lines. Confirm them below: the result is recomputed.',
     d_decline: 'Cannot conclude',
     d_decline_sub: 'I would rather say nothing than risk a wrong figure.',
-    r_no_text_layer_original: 'The original offer has no usable text (scan or image). Please provide a text PDF.',
-    r_no_text_layer_revised: 'The revised offer has no usable text (scan or image). Please provide a text PDF or confirm the values by hand.',
+    r_no_text_layer_original: 'The original offer has no usable text (scan or image). Please provide a text file (text PDF, Word, Excel...).',
+    r_no_text_layer_revised: 'The revised offer has no usable text (scan or image). Please provide a text file (text PDF, Word, Excel...) or confirm the values by hand.',
     r_no_line_items_original: 'No line-item table recognised in the original offer.',
     r_no_line_items_revised: 'No line-item table recognised in the revised offer.',
     r_currency_mismatch: 'The two offers are not in the same currency.',
@@ -109,15 +111,19 @@ const I18N = {
     sec_nc: 'Not reported as changes', nc_renamed: 'Renamed line', nc_reordered: 'Row order changed.', nc_none: 'Nothing.',
     tech: 'Technical details', tech_line: 'Reading {a} ms + {b} ms · comparison {c} ms · server total {d} ms · method: {m}',
     warnings: 'Warnings',
-    v_title: 'Change sources', v_close: 'Close', v_orig: 'Original offer — page {p}', v_rev: 'Revised offer — page {p}',
-    v_absent: 'This line does not exist in this version.', v_fail: 'The PDF cannot be displayed in this browser.',
+    v_title: 'Change sources', v_close: 'Close', v_orig: 'Original offer — page {p}', v_rev: 'Revised offer — page {p}', v_orig_g: 'Original offer — {p}', v_rev_g: 'Revised offer — {p}',
+    loc_line: 'line {r}', loc_table: '{g}, row {r}', loc_item: 'item {r}', loc_field: 'field “{k}”', loc_cell: 'cell {k}',
+    gname: { Tableau: 'Table', Texte: 'Text', Fichier: 'File', 'Éléments': 'Items', Champs: 'Fields' },
+    v_absent: 'This line does not exist in this version.', v_fail: 'The document cannot be displayed in this browser.',
   },
 };
 
 const SAMPLES = {
-  normal: 'offer_revised.pdf', format: 'offer_original_reformatted.pdf',
-  ambiguous: 'offer_revised_ambiguous.pdf', scanned: 'offer_revised_scanned.pdf',
+  normal: ['offer_original.pdf', 'offer_revised.pdf'], format: ['offer_original.pdf', 'offer_original_reformatted.pdf'],
+  ambiguous: ['offer_original.pdf', 'offer_revised_ambiguous.pdf'], scanned: ['offer_original.pdf', 'offer_revised_scanned.pdf'],
+  mixed: ['offer_original.xlsx', 'offer_revised.docx'],
 };
+const MIME = { pdf: 'application/pdf', xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
 
 let lang = (navigator.language || 'en').toLowerCase().startsWith('fr') ? 'fr' : 'en';
 const state = { files: { original: null, revised: null }, pdf: {}, overrides: { pairs: [], removed: [], added: [] }, report: null, busy: false };
@@ -176,17 +182,17 @@ function setFile(side, file) {
   state.files[side] = file;
   state.overrides = { pairs: [], removed: [], added: [] };
   state.pdf[side] = null;
-  if (file && window.pdfjsLib) {
+  if (file && window.pdfjsLib && /\.pdf$/i.test(file.name)) {
     state.pdf[side] = file.arrayBuffer().then((buf) => pdfjsLib.getDocument({ data: buf }).promise).catch(() => null);
   }
   applyStatic();
 }
 
 async function loadSample(kind) {
-  const names = { original: 'offer_original.pdf', revised: SAMPLES[kind] };
-  for (const side of ['original', 'revised']) {
-    const blob = await (await fetch('samples/' + names[side])).blob();
-    setFile(side, new File([blob], names[side], { type: 'application/pdf' }));
+  const [o, r] = SAMPLES[kind];
+  for (const [side, name] of [['original', o], ['revised', r]]) {
+    const blob = await (await fetch('samples/' + name)).blob();
+    setFile(side, new File([blob], name, { type: MIME[name.split('.').pop()] || '' }));
   }
   runCompare();
 }
@@ -221,10 +227,22 @@ async function runCompare() {
 }
 
 /* ---------- rendu du rapport ---------- */
+const gname = (g) => { const m = /^(\S+)(.*)$/.exec(g || ''); const tr = I18N[lang].gname; return m && tr[m[1]] ? tr[m[1]] + m[2] : g; };
+
+/* Emplacement lisible d'une source : PDF -> « p.2 l.3 » ; Excel -> « Offre!A7:F7 » ; Word/HTML -> « Tableau 1, ligne 3 »... */
+function where(s) {
+  const b = s.bbox || {};
+  if (!s.style) return `${t('page')}${s.page} ${s.block === 'totals' ? t('src_totals') : t('line') + s.row_number}`;
+  if (s.style === 'a1') return b.ref || '';
+  if (s.style === 'field') return t('loc_field', { k: b.ref });
+  if (s.style === 'item') return t('loc_item', { r: b.top });
+  if (s.style === 'table') return t('loc_table', { g: gname(s.grid), r: b.top + 1 });
+  return t('loc_line', { r: b.top + 1 });
+}
+
 function srcBtn(side, s, change) {
   if (!s) return null;
-  const where = s.block === 'totals' ? t('src_totals') : `${t('line')}${s.row_number}`;
-  return el('button', { type: 'button', onclick: () => openViewer(change) }, `${t(side === 'original' ? 'src_orig' : 'src_rev')} ${t('page')}${s.page} ${where}`);
+  return el('button', { type: 'button', onclick: () => openViewer(change) }, `${t(side === 'original' ? 'src_orig' : 'src_rev')} ${where(s)}`);
 }
 
 function banner(r) {
@@ -309,7 +327,7 @@ function decide(kind, g) {
 
 function lineList(items, side, g) {
   return el('ul', {}, items.map((l) => el('li', {}, `${l.label} — ${l.qty} × ${money(l.unit_price)} · ${dateTxt(l.delivery)} `,
-    el('button', { type: 'button', class: 'link small', onclick: () => openViewer({ sources: side === 'original' ? { original: l.source, revised: null } : { original: null, revised: l.source } }) }, `${t('page')}${l.source.page} ${t('line')}${l.source.row_number}`))));
+    el('button', { type: 'button', class: 'link small', onclick: () => openViewer({ sources: side === 'original' ? { original: l.source, revised: null } : { original: null, revised: l.source } }) }, where(l.source)))));
 }
 
 function uncertainSection(r) {
@@ -379,8 +397,11 @@ function renderReport() {
 async function renderPage(side, src) {
   const box = $('#page-' + side);
   box.replaceChildren();
-  $('#vc-' + (side === 'original' ? 'orig' : 'rev')).textContent = t(side === 'original' ? 'v_orig' : 'v_rev', { p: src ? src.page : '—' });
+  const cap = $('#vc-' + (side === 'original' ? 'orig' : 'rev'));
+  if (src && src.style) cap.textContent = t(side === 'original' ? 'v_orig_g' : 'v_rev_g', { p: src.style === 'a1' ? src.grid : gname(src.grid) });
+  else cap.textContent = t(side === 'original' ? 'v_orig' : 'v_rev', { p: src ? src.page : '—' });
   if (!src) { box.append(el('p', { class: 'muted small', style: 'padding:12px' }, t('v_absent'))); return; }
+  if (src.style) { renderGrid(box, side, src); return; }
   try {
     const pdf = await state.pdf[side];
     if (!pdf) throw new Error('no pdf');
@@ -397,6 +418,23 @@ async function renderPage(side, src) {
     box.append(el('p', { class: 'muted small', style: 'padding:12px' }, t('v_fail')));
   }
 }
+
+/* Formats non PDF : le serveur renvoie le contenu lu ; on l'affiche en tableau avec la ligne et la cellule en surbrillance. */
+function renderGrid(box, side, src) {
+  const g = (state.report?.documents?.[side]?.preview?.tables || [])[src.page - 1];
+  if (!g) { box.append(el('p', { class: 'muted small', style: 'padding:12px' }, t('v_fail'))); return; }
+  const a1 = src.style === 'a1';
+  const row = src.bbox.top, col = src.cell ? src.cell.x0 : -1;
+  const head = a1 ? [el('th', {})].concat(g.rows[0].map((_, i) => el('th', {}, colName(i)))) : null;
+  const body = g.rows.map((cells, r) => el('tr', { class: r === row ? 'hit' : '' },
+    el('th', { class: 'rn' }, String(a1 ? r + 1 : r + (src.style === 'item' ? 0 : 1))),
+    cells.map((c, i) => el('td', { class: r === row && i === col ? 'hitc' : '' }, c))));
+  const table = el('table', { class: 'sheet' }, head ? el('thead', {}, el('tr', {}, head)) : null, el('tbody', {}, body));
+  const wrap = el('div', { class: 'sheet-wrap' }, table);
+  box.append(wrap);
+  box.querySelector('tr.hit')?.scrollIntoView({ block: 'center' });
+}
+const colName = (i) => { let s = ''; for (i += 1; i; i = Math.floor((i - 1) / 26)) s = String.fromCharCode(65 + ((i - 1) % 26)) + s; return s; };
 
 function openViewer(change) {
   const dlg = $('#viewer');

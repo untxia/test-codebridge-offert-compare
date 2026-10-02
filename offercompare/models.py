@@ -14,6 +14,7 @@ class BBox:
     top: float
     x1: float
     bottom: float
+    ref: Optional[str] = None   # Excel/ODS : référence A1 (« Offre!B5 ») ; champ JSON : nom de la clé
 
 
 @dataclass
@@ -70,6 +71,8 @@ class Offer:
     method: str
     warnings: List[str] = field(default_factory=list)
     elapsed_ms: float = 0.0
+    kind: str = "pdf"                        # pdf | xlsx | docx | ods | odt | csv | html | json | txt | image
+    preview: Optional[dict] = None           # formats non PDF : contenu des grilles, pour l'affichage des sources
 
 
 def to_jsonable(o):
