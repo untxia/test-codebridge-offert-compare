@@ -20,7 +20,21 @@
   html.lenis, html.lenis body { height: auto; }
   .lenis.lenis-smooth { scroll-behavior: auto !important; }
   .lenis.lenis-stopped { overflow: hidden; }
-  body { @apply min-h-screen antialiased; background: radial-gradient(1200px 600px at 70% -10%, #1B2660 0%, transparent 60%), #0A0F1F; }
+  body { @apply min-h-screen antialiased relative; background: transparent; }
+  /* décor : grille de registre (clin d'œil au tableau d'une offre) fondue vers les bords + deux halos qui dérivent lentement + léger grain */
+  body::before { content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    background:
+      radial-gradient(900px 520px at 85% -5%, rgba(108,124,255,.28), transparent 65%),
+      radial-gradient(760px 480px at 8% 38%, rgba(255,210,63,.07), transparent 65%),
+      radial-gradient(900px 600px at 70% 105%, rgba(76,92,240,.22), transparent 65%),
+      #0A0F1F; animation: drift 28s ease-in-out infinite alternate; }
+  body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(154,166,198,.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(154,166,198,.07) 1px, transparent 1px),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+    background-size: 56px 56px, 56px 56px, 160px 160px; opacity: .55;
+    -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 35%, #000 25%, transparent 85%); mask-image: radial-gradient(ellipse 85% 70% at 50% 35%, #000 25%, transparent 85%); }
   h1, h2, h3 { @apply font-display; }
   h2 { @apply text-lg font-semibold mb-3; }
   h3 { @apply text-base font-semibold mt-4 mb-2; }
@@ -113,6 +127,7 @@
 }
 
 @keyframes bob { 50% { --float: -6px; } }
+@keyframes drift { to { transform: translate3d(-2%, 1.5%, 0) scale(1.05); } }
 @keyframes s { to { transform: rotate(360deg); } }
 @keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(255,210,63,.25); } }
 @keyframes fly { from { opacity: 0; transform: perspective(1400px) translateY(60px) translateZ(-260px) rotateX(24deg) scale(.9); } to { opacity: 1; } }
@@ -121,4 +136,4 @@
   table.responsive tr { @apply block border-b border-white/10 py-1.5; }
   table.responsive td { @apply block border-0 px-1 py-0.5 text-left; }
 }
-@media (prefers-reduced-motion: reduce) { .spin, dialog.fly, .hl, .window { animation: none; } .drop:hover { transform: none; } dialog { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .spin, dialog.fly, .hl, .window, body::before { animation: none; } .drop:hover { transform: none; } dialog { transition: none; } }
