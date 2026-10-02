@@ -187,7 +187,7 @@ const io = ('IntersectionObserver' in window && !REDUCED) ? new IntersectionObse
     e.target.classList.add('in');
     io.unobserve(e.target);
   }
-}, { threshold: 0.14, rootMargin: '0px 0px -7% 0px' }) : null;
+}, { threshold: 0.1, rootMargin: '0px 0px -2% 0px' }) : null;
 
 function reveal(el, cls = 'rv') {
   if (!io || el.classList.contains('in')) return;
