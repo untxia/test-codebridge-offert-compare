@@ -31,8 +31,19 @@
 
   <section class="hero" aria-label="Offer Compare">
     <div class="wrap hero-copy">
+      <p class="eyebrow"><span class="pulse" aria-hidden="true"></span><span id="t-eyebrow"></span></p>
       <h2 id="t-hero"></h2>
-      <p id="t-intro" class="intro"></p>
+      <div class="hero-grid">
+        <div>
+          <p id="t-intro" class="intro"></p>
+          <p class="cta-row"><a href="#app-window" class="cta" id="t-cta"></a><span class="cta-note" id="t-cta-note"></span></p>
+        </div>
+        <ol class="points" aria-label="Points clés">
+          <li><b>01</b><div><h3 id="t-p1t"></h3><p id="t-p1d"></p></div></li>
+          <li><b>02</b><div><h3 id="t-p2t"></h3><p id="t-p2d"></p></div></li>
+          <li><b>03</b><div><h3 id="t-p3t"></h3><p id="t-p3d"></p></div></li>
+        </ol>
+      </div>
     </div>
     <canvas id="hero-canvas" aria-hidden="true"></canvas>
   </section>

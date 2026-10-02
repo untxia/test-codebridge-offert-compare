@@ -4,6 +4,10 @@
 const I18N = {
   fr: {
     title: 'Offer Compare',
+    eyebrow: "Comparateur d'offres commerciales", cta: 'Comparer deux offres', cta_note: 'Aucun compte, rien n\'est conservé',
+    p1t: 'Les écarts qui comptent', p1d: 'Périmètre, quantités, prix, totaux, dates de livraison. Le reste (mise en forme, ordre, libellés) est mis de côté.',
+    p2t: 'La preuve, des deux côtés', p2d: 'Chaque changement renvoie à son emplacement exact dans les deux documents : page, cellule ou ligne.',
+    p3t: "Un doute ? Il le dit", p3d: "Lignes ambiguës à confirmer, totaux incohérents signalés sans être corrigés, refus net si le document est illisible.",
     hero: 'Ce qui a vraiment changé entre deux offres, avec la preuve dans chaque document.',
     intro: "Déposez l'offre d'origine et sa révision (PDF, Word, Excel, CSV, HTML, JSON ou texte). L'outil liste les changements de fond — périmètre, quantités, prix unitaires, totaux, dates de livraison — chacun avec son emplacement dans les deux documents. Rien à ressaisir.",
     inputs: 'Documents', orig: 'Offre originale', rev: 'Offre révisée', choose: 'Cliquer ou déposer un fichier',
@@ -61,6 +65,10 @@ const I18N = {
   },
   en: {
     title: 'Offer Compare',
+    eyebrow: 'Commercial offer comparison', cta: 'Compare two offers', cta_note: 'No account, nothing is stored',
+    p1t: 'The changes that matter', p1d: 'Scope, quantities, prices, totals, delivery dates. The rest (layout, order, wording) is set aside.',
+    p2t: 'Proof on both sides', p2d: 'Every change points to its exact location in both documents: page, cell or line.',
+    p3t: 'In doubt? It says so', p3d: 'Ambiguous lines to confirm, inconsistent totals flagged but never corrected, a clear refusal when a document is unreadable.',
     hero: 'What really changed between two offers, with the proof in each document.',
     intro: 'Drop the original offer and its revision (PDF, Word, Excel, CSV, HTML, JSON or text). The tool lists the substantive changes — scope, quantities, unit prices, totals, delivery dates — each with its location in both documents. Nothing to retype.',
     inputs: 'Documents', orig: 'Original offer', rev: 'Revised offer', choose: 'Click or drop a file',
@@ -169,7 +177,7 @@ function applyStatic() {
   document.documentElement.lang = lang;
   document.title = t('title');
   const set = (id, k) => { $(id).textContent = t(k); };
-  set('#t-title', 'title'); set('#t-intro', 'intro'); set('#t-hero', 'hero'); set('#t-inputs', 'inputs'); set('#t-orig', 'orig'); set('#t-rev', 'rev');
+  set('#t-title', 'title'); set('#t-intro', 'intro'); set('#t-hero', 'hero'); for (const k of ['eyebrow', 'cta', 'cta_note', 'p1t', 'p1d', 'p2t', 'p2d', 'p3t', 'p3d']) set('#t-' + k.replace('_', '-'), k); set('#t-inputs', 'inputs'); set('#t-orig', 'orig'); set('#t-rev', 'rev');
   set('#t-samples', 'samples'); set('#t-limits', 'limits'); set('#viewer-title', 'v_title'); set('#viewer-close', 'v_close');
   $('#btn-compare').textContent = state.busy ? t('comparing') : t('compare');
   for (const b of document.querySelectorAll('[data-sample]')) b.textContent = t('s_' + b.dataset.sample);
@@ -221,6 +229,7 @@ function animateHero() {
   const ws = [...h.querySelectorAll('.w')];   // direction propre à chaque mot pour l'effet au défilement
   ws.forEach((w, i) => { w.style.setProperty('--dx', ((i - (ws.length - 1) / 2) * 6).toFixed(1) + 'px'); w.style.setProperty('--dy', (-(10 + (i % 3) * 16 + i * 2)).toFixed(0) + 'px'); });
   requestAnimationFrame(() => requestAnimationFrame(() => h.classList.add('in')));
+  document.querySelectorAll('.eyebrow, .cta-row, .points li').forEach((x, i) => { x.classList.remove('in', 'rv'); void x.offsetWidth; x.style.transitionDelay = (520 + i * 110) + 'ms'; x.classList.add('rv', 'rv-soft'); requestAnimationFrame(() => requestAnimationFrame(() => x.classList.add('in'))); });
   const intro = $('#t-intro');
   intro.classList.remove('in', 'rv'); void intro.offsetWidth; intro.style.transitionDelay = '420ms';
   intro.classList.add('rv'); requestAnimationFrame(() => requestAnimationFrame(() => intro.classList.add('in')));
