@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="vendor/tailwind.css">
 </head>
 <body>
+  <canvas id="bg3d" aria-hidden="true"></canvas>
+  <canvas id="logo3d" aria-hidden="true"></canvas>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <!-- réfraction du verre : le décor derrière est légèrement déformé (Chromium ; ailleurs, simple flou) -->
   <filter id="glass-refract" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
@@ -138,5 +140,6 @@
   <script src="app.js"></script>
   <script type="module" src="vendor/hero.js"></script>
   <script type="module" src="vendor/scroll.js"></script>
+  <script type="module" src="vendor/stage3d.js"></script>
 </body>
 </html>

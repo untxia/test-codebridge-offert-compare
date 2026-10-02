@@ -4,7 +4,7 @@
   "description": "Build-time only: compiles Tailwind into ../public/vendor/tailwind.css (committed).",
   "scripts": {
     "build:css": "tailwindcss -c tailwind.config.js -i src/input.css -o ../public/vendor/tailwind.css --minify",
-    "build:js": "esbuild src/hero.js src/scroll.js --bundle --minify --format=esm --outdir=../public/vendor",
+    "build:js": "esbuild src/hero.js src/scroll.js src/stage3d.js --bundle --splitting --minify --format=esm --outdir=../public/vendor",
     "build": "npm run build:css && npm run build:js"
   },
   "devDependencies": {

@@ -298,7 +298,7 @@ function splash() {
     if (scrollY > innerHeight * .6) return;
     const hi = document.querySelector('.brand img').getBoundingClientRect(), hn = $('#t-title').getBoundingClientRect();
     const one = (el, tg) => { const sv = el.style.transform; el.style.transform = 'none'; const r = el.getBoundingClientRect(); el.style.transform = sv;
-      return { dx: tg.left + tg.width / 2 - (r.left + r.width / 2), dy: tg.top + tg.height / 2 - (r.top + r.height / 2), s: tg.width / r.width }; };
+      return { dx: tg.left + tg.width / 2 - (r.left + r.width / 2), dy: tg.top + tg.height / 2 - (r.top + r.height / 2), s: tg.width / r.width, bx: r.left + r.width / 2, by: r.top + r.height / 2, bw: r.width }; };
     M = { lg: one(lg, hi), nm: one(nm, hn) };
   };
   const smooth = (x) => x * x * (3 - 2 * x), clamp = (x) => Math.min(1, Math.max(0, x));
@@ -309,8 +309,9 @@ function splash() {
     root.style.setProperty('--sp', p.toFixed(3));
     const arc = Math.sin(Math.PI * e) * -34;
     lg.style.transform = 'translate3d(' + M.lg.dx * e + 'px,' + (M.lg.dy * e + arc) + 'px,0) scale(' + (1 + (M.lg.s - 1) * e) + ') rotate(' + (-e * 360 * 0) + 'deg)';
-    nm.style.transform = 'translate3d(' + M.nm.dx * e + 'px,' + (M.nm.dy * e - arc * .5) + 'px,0) scale(' + (1 + (M.nm.s - 1) * e) + ')';
+    nm.style.transform = 'perspective(900px) rotateY(' + (nm.dataset.px || 0) * 16 * (1 - e) + 'deg) rotateX(' + (nm.dataset.py || 0) * -12 * (1 - e) + 'deg) translate3d(' + M.nm.dx * e + 'px,' + (M.nm.dy * e - arc * .5) + 'px,0) scale(' + (1 + (M.nm.s - 1) * e) + ')';
     const out = 1 - clamp((p - .9) * 10);
+    if (window.__logo3d) window.__logo3d.update({ cx: M.lg.bx + M.lg.dx * e, cy: M.lg.by + M.lg.dy * e + arc, size: M.lg.bw * (1 + (M.lg.s - 1) * e), e, p, out });
     lg.style.opacity = nm.style.opacity = out;
     tag.style.setProperty('--fo', Math.max(0, 1 - p * 4)); cue.style.setProperty('--fo', Math.max(0, 1 - p * 5));
     glow.style.transform = 'scale(' + (1 + p * .9) + ')'; glow.style.setProperty('--fo', Math.max(0, 1 - p * 1.4));
@@ -321,8 +322,27 @@ function splash() {
   addEventListener('scroll', req, { passive: true });
   addEventListener('resize', () => { M = null; req(); });
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { M = null; upd(); });
+  addEventListener('logo3d-ready', () => { M = null; upd(); });
   root.style.setProperty('--sp', 0); upd();
+  addEventListener('pointermove', (e) => { const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5; nm.dataset.px = x; nm.dataset.py = y; req(); }, { passive: true });
   window.__spMeasure = () => { M = null; req(); };
+}
+
+
+/* ---------- profondeur : la fenêtre et les cartes pivotent légèrement selon leur position à l'écran ---------- */
+function depthTilt() {
+  if (REDUCED) return;
+  let tick = false;
+  const run = () => {
+    tick = false;
+    document.querySelectorAll('.window, #result > .card').forEach((el) => {
+      const r = el.getBoundingClientRect(); if (r.bottom < -100 || r.top > innerHeight + 100) return;
+      const k = Math.max(-1, Math.min(1, ((r.top + r.height / 2) - innerHeight * .5) / (innerHeight * .75)));
+      el.style.rotate = '1 0 0 ' + (k * 9).toFixed(2) + 'deg'; el.style.translate = '0 0 ' + (-Math.abs(k) * 40).toFixed(1) + 'px';
+    });
+  };
+  addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(run); } }, { passive: true });
+  addEventListener('resize', run); run();
 }
 
 function heroScroll() {
@@ -659,6 +679,6 @@ function init() {
   splash();
   if (!REDUCED && scrollY < innerHeight * .3) addEventListener('scroll', function f() { if (scrollY > innerHeight * .3) { removeEventListener('scroll', f); animateHero(); } }, { passive: true });
   else animateHero();
-  animateWindow(); heroScroll();
+  animateWindow(); heroScroll(); depthTilt();
 }
 init();
