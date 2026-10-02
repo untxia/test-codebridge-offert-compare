@@ -43,6 +43,12 @@ python3 evaluation/holdout/make_holdout.py      # regenerate the hold-out pairs 
 3. **Diff and report** (`diff.py`): change list, arithmetic checks, net effect (stated vs recomputed, amount left unattributed by uncertain groups), decision: `conclude`, `no_changes`, `conclude_partially_and_ask`, `decline`.
 4. **UI** (`public/`): vanilla JS; pdf.js (vendored, Apache-2.0) for the side-by-side viewer with highlights; all text inserted with `textContent`. Look and feel: Tailwind CSS (compiled to `public/vendor/tailwind.css`), inertial smooth scrolling (Lenis), a three.js hero scene (two floating sheets linked by the changed line, bundled to `public/vendor/hero.js`) and a floating 3D viewer window; both respect `prefers-reduced-motion`. Fonts (Bricolage Grotesque, IBM Plex Sans, OFL) are self-hosted. To rebuild the assets: `cd frontend && npm install && npm run build` (the built files are committed, no build step on Vercel).
 
+## Optional AI assistant (explains the report, never computes it)
+
+The comparison itself stays deterministic. On top of it, an optional assistant answers questions about the **already computed report** ("why doesn't the total add up?", "draft an email to the supplier"). It is off unless `ANTHROPIC_API_KEY` is set (Vercel → Settings → Environment Variables; optional `ANTHROPIC_MODEL`, default `claude-haiku-4-5-20251001`). Without the key the panel is simply hidden.
+
+Guard-rails (`offercompare/agent.py`, `tests/test_agent.py`): the model only receives the report (geometry stripped), never the files; the system prompt forbids recomputing or "correcting" amounts and requires source citations; document excerpts are declared as data, not instructions; every figure in the answer is searched in the report and **unmatched figures are flagged** to the user. Privacy note: when used, the report (not the files) is sent to the Anthropic API.
+
 ## Deploy (Vercel)
 
 `vercel.json` + `requirements.txt` + `api/index.py` (FastAPI) + `public/` (static). `vercel --prod` from this folder, or import the GitHub repo in Vercel with the **Other** preset (the config is in `vercel.json`).

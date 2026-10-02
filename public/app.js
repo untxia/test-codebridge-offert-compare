@@ -4,7 +4,7 @@
 const I18N = {
   fr: {
     title: 'Offer Compare',
-    eyebrow: "Comparateur d'offres commerciales", cta: 'Comparer deux offres', sp_tag: 'Voyez ce qui a vraiment changé', sp_cue: 'Défiler pour entrer', cta_note: 'Aucun compte, rien n\'est conservé', nav_cmp: 'Comparer', nav_res: 'Résultats', nav_how: 'Principe',
+    eyebrow: "Comparateur d'offres commerciales", cta: 'Comparer deux offres', ag_title: "Poser une question à l'assistant", ag_note: "L'assistant ne voit que le rapport ci-dessus : il explique, il ne recalcule rien, et les chiffres qu'il cite sont vérifiés dans le rapport. Pour répondre, le rapport (pas les fichiers) est transmis à l'API Anthropic.", ag_ph: 'Ex. : pourquoi le total HT ne colle pas ?', ag_send: 'Envoyer', ag_c1: 'Résume les écarts', ag_c2: 'Pourquoi le total HT ne colle pas ?', ag_c3: 'Rédige un mail au fournisseur', ag_think: "L'assistant lit le rapport…", ag_err: 'Assistant indisponible : ', ag_warn: "Chiffres non retrouvés dans le rapport : {n}. À vérifier avant de s'y fier.", ag_you: 'Vous', ag_ai: 'Assistant', sp_tag: 'Voyez ce qui a vraiment changé', sp_cue: 'Défiler pour entrer', cta_note: 'Aucun compte, rien n\'est conservé', nav_cmp: 'Comparer', nav_res: 'Résultats', nav_how: 'Principe',
     p1t: 'Les écarts qui comptent', p1d: 'Périmètre, quantités, prix, totaux, dates de livraison. Le reste (mise en forme, ordre, libellés) est mis de côté.',
     p2t: 'La preuve, des deux côtés', p2d: 'Chaque changement renvoie à son emplacement exact dans les deux documents : page, cellule ou ligne.',
     p3t: "Un doute ? Il le dit", p3d: "Lignes ambiguës à confirmer, totaux incohérents signalés sans être corrigés, refus net si le document est illisible.",
@@ -65,7 +65,7 @@ const I18N = {
   },
   en: {
     title: 'Offer Compare',
-    eyebrow: 'Commercial offer comparison', cta: 'Compare two offers', sp_tag: 'See what really changed', sp_cue: 'Scroll to enter', cta_note: 'No account, nothing is stored', nav_cmp: 'Compare', nav_res: 'Results', nav_how: 'How it works',
+    eyebrow: 'Commercial offer comparison', cta: 'Compare two offers', ag_title: 'Ask the assistant', ag_note: 'The assistant only sees the report above: it explains, it recomputes nothing, and the figures it quotes are checked against the report. To answer, the report (not your files) is sent to the Anthropic API.', ag_ph: 'e.g. why does the total excl. VAT not add up?', ag_send: 'Send', ag_c1: 'Summarise the changes', ag_c2: 'Why does the total excl. VAT not add up?', ag_c3: 'Draft an email to the supplier', ag_think: 'The assistant is reading the report…', ag_err: 'Assistant unavailable: ', ag_warn: 'Figures not found in the report: {n}. Check them before relying on them.', ag_you: 'You', ag_ai: 'Assistant', sp_tag: 'See what really changed', sp_cue: 'Scroll to enter', cta_note: 'No account, nothing is stored', nav_cmp: 'Compare', nav_res: 'Results', nav_how: 'How it works',
     p1t: 'The changes that matter', p1d: 'Scope, quantities, prices, totals, delivery dates. The rest (layout, order, wording) is set aside.',
     p2t: 'Proof on both sides', p2d: 'Every change points to its exact location in both documents: page, cell or line.',
     p3t: 'In doubt? It says so', p3d: 'Ambiguous lines to confirm, inconsistent totals flagged but never corrected, a clear refusal when a document is unreadable.',
@@ -134,7 +134,7 @@ const SAMPLES = {
 const MIME = { pdf: 'application/pdf', xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
 
 let lang = (navigator.language || 'en').toLowerCase().startsWith('fr') ? 'fr' : 'en';
-const state = { files: { original: null, revised: null }, pdf: {}, overrides: { pairs: [], removed: [], added: [] }, report: null, busy: false };
+const state = { files: { original: null, revised: null }, pdf: {}, overrides: { pairs: [], removed: [], added: [] }, report: null, busy: false, chat: [], chatFor: null };
 
 const $ = (s, r = document) => r.querySelector(s);
 const t = (k, p = {}) => (I18N[lang][k] ?? k).replace(/\{(\w+)\}/g, (_, n) => (p[n] ?? ''));
@@ -183,6 +183,7 @@ function applyStatic() {
   for (const b of document.querySelectorAll('[data-sample]')) b.textContent = t('s_' + b.dataset.sample);
   for (const b of document.querySelectorAll('[data-lang]')) b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
   for (const side of ['original', 'revised']) $('#name-' + side).textContent = state.files[side] ? state.files[side].name : t('choose');
+  if (typeof syncAgent === 'function' && $('#agent')) syncAgent();
 }
 
 /* ---------- apparition au défilement ---------- */
@@ -405,7 +406,7 @@ async function runCompare() {
     status.replaceChildren();
     renderReport();
   } catch (e) {
-    state.report = null;
+    state.report = null; if ($('#agent')) syncAgent();
     $('#result').replaceChildren(el('div', { class: 'banner bad', role: 'alert' }, el('h2', {}, t('err')), el('p', {}, e instanceof TypeError ? t('errNet') : e.message)));
     status.replaceChildren();
   } finally {
@@ -575,11 +576,63 @@ function techSection(r) {
     r.warnings.length ? el('div', {}, el('strong', { class: 'small' }, t('warnings')), el('ul', {}, r.warnings.map((w) => el('li', { class: 'small' }, w)))) : null);
 }
 
+
+/* ---------- assistant IA : explique le rapport déjà calculé (n'entre jamais dans le calcul) ---------- */
+let agentOn = false, agentBusy = false;
+function mdLite(txt) {   // échappe d'abord, puis **gras** et listes à puces
+  const esc = txt.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const out = []; let list = false;
+  for (const raw of esc.split('\n')) {
+    const m = raw.match(/^\s*(?:[-*•]|\d+\.)\s+(.*)$/), inl = (x) => x.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    if (m) { if (!list) { out.push('<ul>'); list = true; } out.push('<li>' + inl(m[1]) + '</li>'); }
+    else { if (list) { out.push('</ul>'); list = false; } out.push(raw.trim() ? '<p>' + inl(raw) + '</p>' : ''); }
+  }
+  if (list) out.push('</ul>'); return out.join('');
+}
+function agentMsg(role, html, warn) {
+  const log = $('#ag-log'), who = role === 'user' ? t('ag_you') : t('ag_ai');
+  const d = el('div', { class: 'ag-m ' + role }, el('b', { class: 'ag-who' }, who));
+  const body = el('div', { class: 'ag-body' }); body.innerHTML = html; d.append(body);
+  if (warn) d.append(el('p', { class: 'ag-warn' }, '⚠ ' + warn));
+  log.append(d); log.scrollTop = log.scrollHeight; return d;
+}
+async function agentAsk(question) {
+  if (agentBusy || !question.trim() || !state.report) return;
+  agentBusy = true; $('#ag-send').disabled = true; $('#ag-input').value = '';
+  agentMsg('user', mdLite(question));
+  const pending = agentMsg('ai', '<p class="ag-think">' + t('ag_think') + '</p>');
+  try {
+    const r = await fetch('api/ask', { method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ report: state.report, question, history: state.chat, lang }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(typeof j.detail === 'string' ? j.detail : 'HTTP ' + r.status);
+    state.chat.push({ role: 'user', content: question }, { role: 'assistant', content: j.answer });
+    pending.remove(); agentMsg('ai', mdLite(j.answer), j.unverified_numbers && j.unverified_numbers.length ? t('ag_warn', { n: j.unverified_numbers.join(', ') }) : null);
+  } catch (e) {
+    pending.remove(); agentMsg('ai', '<p class="ag-warn">' + t('ag_err') + String(e.message).replace(/</g, '&lt;') + '</p>');
+  } finally { agentBusy = false; $('#ag-send').disabled = false; $('#ag-input').focus({ preventScroll: true }); }
+}
+function syncAgent() {
+  const box = $('#agent'); if (!box) return;
+  const show = agentOn && !!state.report;
+  if (show && state.chatFor !== state.report) { state.chatFor = state.report; state.chat = []; $('#ag-log').replaceChildren(); }
+  box.hidden = !show;
+  $('#t-ag-title').textContent = t('ag_title'); $('#t-ag-note').textContent = t('ag_note');
+  $('#ag-input').placeholder = t('ag_ph'); $('#ag-send').textContent = t('ag_send');
+  $('#ag-chips').replaceChildren(...['ag_c1', 'ag_c2', 'ag_c3'].map((k) => el('button', { type: 'button', class: 'chip', onclick: () => agentAsk(t(k)) }, t(k))));
+}
+async function initAgent() {
+  try { const r = await fetch('api/agent'); agentOn = r.ok && (await r.json()).enabled === true; } catch { agentOn = false; }
+  $('#ag-form').addEventListener('submit', (e) => { e.preventDefault(); agentAsk($('#ag-input').value); });
+  syncAgent();
+}
+
 function renderReport() {
   const r = state.report;
   const first = !state.hadReport; state.hadReport = true;
   $('#result').replaceChildren(...[banner(r), netEffect(r), changesSection(r), uncertainSection(r), arithSection(r), ncSection(r), techSection(r)].filter(Boolean));
   if (first) animateResult();
+  syncAgent();
 }
 
 /* ---------- visionneuse de sources ---------- */
@@ -676,7 +729,7 @@ function init() {
   $('#viewer-close').addEventListener('click', () => $('#viewer').close());
   $('#viewer').addEventListener('click', (e) => { if (e.target === $('#viewer')) $('#viewer').close(); });
   applyStatic();
-  splash();
+  splash(); initAgent();
   if (!REDUCED && scrollY < innerHeight * .3) addEventListener('scroll', function f() { if (scrollY > innerHeight * .3) { removeEventListener('scroll', f); animateHero(); } }, { passive: true });
   else animateHero();
   animateWindow(); heroScroll(); depthTilt();

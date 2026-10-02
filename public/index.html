@@ -122,6 +122,17 @@
 
     <div id="status" role="status" aria-live="polite"></div>
     <div id="result"></div>
+
+    <section class="card agent" id="agent" hidden aria-labelledby="t-ag-title">
+      <h2 id="t-ag-title"></h2>
+      <p class="hint" id="t-ag-note"></p>
+      <div class="ag-chips" id="ag-chips"></div>
+      <div class="ag-log" id="ag-log" aria-live="polite"></div>
+      <form class="ag-form" id="ag-form" autocomplete="off">
+        <input id="ag-input" type="text" maxlength="600" aria-labelledby="t-ag-title">
+        <button type="submit" class="primary" id="ag-send"></button>
+      </form>
+    </section>
   </main>
 
   <dialog id="viewer" aria-labelledby="viewer-title">

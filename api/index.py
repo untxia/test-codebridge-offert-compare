@@ -11,6 +11,7 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from offercompare import agent  # noqa: E402
 from offercompare.diff import compare_files  # noqa: E402
 from offercompare.readers import UnsupportedFormat  # noqa: E402
 
@@ -65,3 +66,19 @@ async def compare(original: UploadFile = File(...), revised: UploadFile = File(.
             raise HTTPException(415, str(e))
         except Exception as e:   # PDF corrompu, chiffré...
             raise HTTPException(422, f"Lecture impossible ({type(e).__name__}) : fichier corrompu, protégé ou format inattendu.")
+
+
+@app.get("/api/agent")
+def agent_status():
+    return {"enabled": agent.enabled()}
+
+
+@app.post("/api/ask")
+async def ask(payload: dict):
+    """Assistant IA : explique le rapport déjà calculé (aucun fichier n'est reçu, rien n'est conservé)."""
+    try:
+        return agent.ask(payload.get("report"), payload.get("question", ""), payload.get("history"), payload.get("lang", "fr"))
+    except agent.AgentDisabled:
+        raise HTTPException(503, "agent_disabled")
+    except agent.AgentError as e:
+        raise HTTPException(502, str(e))

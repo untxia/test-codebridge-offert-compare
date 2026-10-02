@@ -38,7 +38,7 @@ Missed changes: **0/7** on S1–S4, **0/12** on hold-out (after fixes). False ch
 * Not handled: scans (declined on purpose, no OCR), handwriting, multi-currency conversion, non-FR/EN labels, discounts/optional lines as separate semantics.
 
 ## 5. AI tools and models
-Claude Code (Anthropic), model **Claude Sonnet 5.5** (`claude-sonnet-5-5`), used to write the code, test set, tests and documents under my direction. No AI model is called by the application at runtime. **[Chris]** add anything else you used.
+Claude Code (Anthropic), model **Claude Sonnet 5.5** (`claude-sonnet-5-5`), used to write the code, test set, tests and documents under my direction. The comparison engine calls no model. An optional assistant (off without `ANTHROPIC_API_KEY`) explains the already-computed report with `claude-haiku-4-5-20251001`; it never computes amounts, and any figure it quotes that is not in the report is flagged (8 unit tests, mocked API). **[Chris]** add anything else you used.
 
 ## 6. One example of checking AI output
 Running the app on S3 showed a stated-total change that my answer key lacked. I checked the two PDFs (18,900 → 19,640 is really there), concluded the key was wrong and the app right, corrected the key and disclosed it (§4), then re-ran the independent verifier (`verify_testset.py`). Another: bounding boxes are validated by re-reading the PDF text under each returned box, not by trusting the extractor.
