@@ -16,7 +16,10 @@
 }
 
 @layer base {
-  html { @apply font-sans text-ink bg-night; }
+  html { @apply font-sans text-ink bg-night; scroll-behavior: auto; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: hidden; }
   body { @apply min-h-screen antialiased; background: radial-gradient(1200px 600px at 70% -10%, #1B2660 0%, transparent 60%), #0A0F1F; }
   h1, h2, h3 { @apply font-display; }
   h2 { @apply text-lg font-semibold mb-3; }

@@ -75,7 +75,8 @@ function init(canvas) {
   function frame(t) {
     const s = t / 1000;
     cur.x += (mouse.x - cur.x) * 0.05; cur.y += (mouse.y - cur.y) * 0.05;
-    world.rotation.y = cur.x * 0.5; world.rotation.x = cur.y * 0.25;
+    const sc = Math.min(scrollY / 600, 1.5);                       // les feuilles dérivent doucement quand on descend
+    world.rotation.y = cur.x * 0.5 + sc * 0.35; world.rotation.x = cur.y * 0.25 - sc * 0.12; world.position.y = sc * 0.9;
     if (!reduce.matches) {
       A.holder.position.y = 0.1 + Math.sin(s * 0.9) * 0.12; B.holder.position.y = -0.1 + Math.sin(s * 0.9 + 1.7) * 0.12;
       A.holder.rotation.z = 0.06 + Math.sin(s * 0.5) * 0.02; B.holder.rotation.z = -0.07 + Math.cos(s * 0.5) * 0.02;
